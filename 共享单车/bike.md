@@ -122,12 +122,84 @@ MV层是框架自己封装,可以完成V-M的映射和M-V的渲染
 ### 安装less-loader
 
 ```js
-yarn add less-loader
+yarn add less less-loader
 ```
 
-### 暴露webpack配置
+### 暴露webpack配置(新的环境下不需要再暴露配置了 跳过)
+
+现在的方式是直接修改配置文件,而不是根据官网使用react-app-rewired
+
+这个后面可能会留坑
 
 ```js
 yarn eject
 ```
+
+
+
+## import
+
+```js
+{"libraryName":"antd"}				加载样式js文件
+{"libraryName":"antd",style:"css"}	加载样式css文件		  按需加载
+{"libraryName":"antd",style:"true"} 加载组件内部的less原文件 可以修改配置文件
+```
+
+
+
+# 一/主页结构开发
+
+## 结构层次
+
+分成左右两侧
+
+右侧分为上中下   中间内容变化
+
+flex布局和antd的栅格系统实际上用一个就可以了
+
+后期-动态生成权限菜单列表
+
+
+
+时间:第三方插件库
+
+Moment
+
+# 二/React-router
+
+* react-router
+  * Router
+  * Route
+  * Switch
+* react-router-dom
+  * BrowserRouter
+  * HashRouter
+  * Route
+    * path
+    * exact
+    * component
+    * render
+  * Link
+  * NavLink
+* react-router-dom核心用法
+
+
+
+## Axios使用JsonP跨域
+
+安装
+
+```js
+yarn add jsonp --save
+```
+
+> 模式:通常我们会使用promise再对函数做进一步的封装用以控制错误
+
+# Bug
+
+### 一,antdUI如果在暗模式下,使用弹出menu出现Bug,走马灯
+
+需要给图片加onload，设置高度为auto才行
+
+### 二,react的严格模式会报警告
 
