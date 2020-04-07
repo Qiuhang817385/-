@@ -101,3 +101,33 @@ yarn add redux-saga
 yarn add axios
 ```
 
+
+
+## 什么是框架  是mvc  mv* 是react库和周边生态共同构成的一个框架
+
+### mv* 框架 只关注视图的View层+数据Model层
+
+MV层是框架自己封装,可以完成V-M的映射和M-V的渲染
+
+
+
+生态 Vue:Vue+Vue-Router+vuex+axios+babel+webpack
+
+​		react:react+react-router+redux+axios+babel+webpack
+
+
+
+## 自定义主题Antd
+
+### 安装less-loader
+
+```js
+yarn add less-loader
+```
+
+### 暴露webpack配置
+
+```js
+yarn eject
+```
+
