@@ -1,6 +1,7 @@
 @import "../../style/default.scss";
 
 .home-wrap {
+  width: 100%;
   background-color: $colorM;
   height: calc(60vh);
   // 这里用vh,不能用百分比,但是相当于百分比
