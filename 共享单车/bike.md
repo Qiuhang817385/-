@@ -700,6 +700,50 @@ requestList().then((res) => {
 
 ```
 
+# 六/表格
+
+```js
+1/title
+dataIndex
+dataSource
+pagination = {false}
+key:React 需要的 key，如果已经设置了唯一的 dataIndex，可以忽略这个属性
+
+2/Mock Axios的封装,Loading处理,错误拦截
+http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/table/list
+axios有baseUrl参数
+
+3.axios的封装
+
+4.数据字典的使用
+ render: state => {
+      let config = {
+        '1': '完成',
+        '2': '未付款',
+        '3': '进行中',
+        '4': '付款中',
+        '5': '准备开始'
+      }
+      return config[state]
+ }
+ 
+ 动态渲染Key
+ 获取到res res.map((item,index)=>{
+     item.key = index
+ })
+5.单选rowSelection
+	type	多选/单选，checkbox or radio
+    selectRowKeys
+   
+  多选框
+   const checkMore = {
+    type: 'checkbox',
+    // 细节,第一个参数必须是selectedRowKeys
+    selectedRowKeys: selectedRowKeys22,
+  }
+   调用useState方法,一定会渲染DOM
+```
+
 
 
 # 项目工程化
@@ -810,19 +854,17 @@ axios.get('/open_city_copy', {
 
 # Bug
 
-### 一,antdUI如果在暗模式下,使用弹出menu出现Bug,走马灯
+### 一,antdUI如果在暗模式下,使用弹出menu出现Bug,
 
-需要给图片加onload，设置高度为auto才行
+走马灯需要给图片加onload，设置高度为auto才行
 
 ### 二,react的严格模式会报警告
-
-
 
 ## 三/react-Hook存储对象的话,最多可以访问两层
 
 ## 四/ReactHooks
 
-```
+```js
 Bug  使用Hooks
 当存储对象的时候,使用null,或者直接不填
 const [resF, setRes] = useState({});
@@ -851,6 +893,50 @@ const [resF, setRes] = useState({});
 那么两种方式都可以
 objs: {}
 objs: null
+--------------------------------------------------------------------
+
+Hooks获取到最新的值
+console.log(count);
+setCount(12);
+console.log(count);
+这样获取的仍然是旧值
+
+解决办法
+1.放到promise当中
+2.setParams({ mockData: 2333333 });
+// 如何让getData里params是最新的？？？
+getData();
+
+setParams({ mockData: 2333333 });
+setParams(currParams => {
+    getData(currParams)
+    return currParams
+})
+
+3.setParams(()=>{
+    const nextParams = { mockData: 2333333 }
+    getData(nextParams)
+    return nextParams
+});
+--------------------------------------------------------------------
+react-Hook只运行在react顶层使用
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys);
+      setselectItem(selectedRows)
+    }
+  }
+这样使用会报错
+------解决办法,定义一个顶层的函数并且调用它
+const rowSelection = {
+    // type: 'checkbox',
+    type: 'radio',
+    selectedRowKeys,
+    onChange: (selectedRowKeys, selectedRows) => {
+        //顶层函数
+      rowSelectChange(selectedRowKeys, selectedRows)
+    }
+  }
 ```
 
 # 持续优化

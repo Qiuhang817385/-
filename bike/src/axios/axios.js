@@ -73,4 +73,36 @@ export default class Axios {
       // then结束
     });
   }
+
+
+
+  static axiosGet (options) {
+    let baseApi = "http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/"
+    return new Promise((resolve, reject) => {
+      axios({
+        url: options.url,
+        method: 'get',
+        baseURL: baseApi,
+        timeout: 5000,
+        params: (options.data && options.data.params) || '',
+      }).then((response) => {
+        if (response.status = "200") {
+          let res = response.data;
+          if (res.code == '0') {
+            resolve(res)
+          } else {
+            // 简单的错误拦截
+            Modal.info({
+              title: "提示",
+              content: res.msg
+            })
+          }
+        } else {
+          reject(response);
+        }
+      }).catch((e) => {
+        console.log(e)
+      })
+    })
+  }
 }
