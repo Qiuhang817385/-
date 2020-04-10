@@ -8,8 +8,9 @@ export default class Header extends Component {
     userName: '',
     sysTime: '',
     dayPictureUrl: '',
-    weather: ''
+    weather: '',
   }
+
   componentDidMount () {
     this.setState({
       userName: '邱航',
@@ -21,13 +22,14 @@ export default class Header extends Component {
         sysTime
       })
     }, 1000)
-    this.getWeatherAPIData();
+    // this.getWeatherAPIData();
   }
   getWeatherAPIData () {
     let city = '秦皇岛';
     axios.jsonp({
       url: 'http://api.map.baidu.com/telematics/v3/weather?location=' + encodeURIComponent(city) + '&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
     }).then((res) => {
+      console.log('res :', res);
       if (res.status === 'success') {
         let data = res.results[0].weather_data[0];
         console.log('data :', data);

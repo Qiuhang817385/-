@@ -331,7 +331,82 @@ switch是从上到下进行匹配,匹配到则下面不再匹配
 
 
 
-# 三/UI
+# 三/UI(新版本)
+
+## Icon
+
+新版本所有的ICON图标都是从第三方图标库当中引出
+
+## spin(Loading)
+
+```js
+  // 两种使用spin的方式
+  //  方式一:直接使用icon图标+spin
+   			<SyncOutlined spin />
+  //  方式二:使用spin图标+icon+spin
+  			<Spin indicator={antIcon} />
+  //  方式二可以自定义描述文案+大小
+```
+
+## Message
+
+```js
+计算属性的使用
+ showMessage = (type) => {
+    message[type]({
+          content: '这是内容',
+    })
+ }
+
+() => this.showMessage('success')
+```
+
+## Model 模态框
+
+```js
+ // 计算属性--->计算是哪一个被打开??
+  handleOpen = (Target) => {
+    this.setState({
+      // 怎么利用传进来的变量
+      [Target]: true
+    })
+  }
+  
+  this.handleOpen('showModal1')  //让模态框1显示
+
+ // 计算属性--->计算打开的是那种类型
+handleConfirm = (type) => {
+    Modal[type]({
+      title: '确认',
+      content: '这里是内容区域',
+      onOk () {
+        console.log('ok')
+      },
+      onCancel () {
+        alert('cancel')
+      }
+    })
+  }
+
+this.handleConfirm('confirm')
+```
+
+## Notification
+
+```js
+通知
+this.openNotificationIcon(<SmileOutlined style={{ color: '#108ee9' }} />)}
+使用自定义图标
+notification.open({
+      message: 'Notification Title',
+      description:
+        'notification.',
+      // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      icon: Icon,
+    });
+```
+
+
 
 ## Tab 
 
@@ -344,12 +419,324 @@ switch是从上到下进行匹配,匹配到则下面不再匹配
 ## 图片画廊
 
 ```js
+这个样式不错
+```
+
+# 四/表单(新版)
+
+> 新版变化,不需要再用Form.Create方法进行创建,直接导出就可以
+
+```js
+API
+--------------------------------------------
+Input
+--------------------------------------------
+prefix	带有前缀图标的 input	string|ReactNode
+suffix	带有后缀图标的 input	string|ReactNode
+<Input.Password />
+<Input.TextArea />
+    
+为什么我动态改变 prefix/suffix 时，Input 会失去焦点？#
+当 Input 动态添加或者删除 prefix/suffix 时，React 会重新创建 DOM 结构而新的 input 是没有焦点的。你可以预设一个空的 <span /> 来保持 DOM 结构不变：
+prefix={<UserOutlined className="site-form-item-icon" />}
+const suffix = condition ? <Icon type="smile" /> : <span />;
+
+<Input suffix={suffix} />;
+--------------------------------------------
+Form
+--------------------------------------------
+colon	示是否显示 label 后面的冒号 (只有在属性 layout 为 horizontal 时有效)  true
+form	经 Form.useForm() 创建的 form 控制实例，不提供时会自动创建	??
+initialValues	表单默认值，只有初始化以及重置时生效		object{{ remember: true }}
+labelCol	label 标签布局，同 <Col> 组件，设置 span offset 值，如 {span: 3, offset: 12} 或 sm: {span: 3, offset: 12}
+wrapperCol	需要为输入控件设置布局样式时，使用该属性，用法同 labelCol	object
+
+layout	表单布局	horizontal | vertical | inline		horizontal
+name	表单名称，会作为表单字段 id 前缀使用	string
+
+onFinish	提交表单且数据验证成功后回调事件	Function(values)
+onFinishFailed	提交表单且数据验证失败后回调事件
+onFieldsChange	字段更新时触发回调事件
+onValuesChange	字段值更新时触发回调事件
+--------------------------------------------
+Form.Item
+--------------------------------------------
+noStyle	为 true 时不带样式，作为纯字段控件使用	boolean	false
+name	字段名，支持数组
+Form--onValuesChange	字段值更新时触发回调事件
+valuePropName	子节点的值的属性，如 Switch 的是 'checked'	string	'value'
+
+被设置了 name 属性的 Form.Item 包装的控件，表单控件会自动添加 value（或 valuePropName 指定的其他属性） onChange（或 trigger 指定的其他属性），数据同步将被 Form 接管，这会导致以下结果：
+
+1.不再也不应该用 onChange 来做数据收集同步（可以使用 Form 的 onValuesChange）
+但还是可以继续监听 onChange 事件。
+2.不能用控件的 value 或 defaultValue 等属性来设置表单域的值，默认值可以用 Form 里的 initialValues 来设置。注意 initialValues 不能被 setState 动态更新，你需要用 setFieldsValue 来更新。(重要)
+3.你不应该用 setState，可以使用 form.setFieldsValue 来动态改变表单值(重要)
+dependencies
+“确认密码”校验依赖于“密码”字段，设置 dependencies 后，“密码”字段更新会重新触发“校验密码”的校验逻辑。
+--------------------------------------------
+Form.List动态渲染功能
+--------------------------------------------
+
+--------------------------------------------
+为什么 Form.Item 下的子组件 defaultValue 不生效？#
+当你为 Form.Item 设置 name 属性后，子组件会转为受控模式。因而 defaultValue 不会生效。你需要在 Form 上通过 initialValues 设置默认值。
+--------------------------------------------
+
+<Button type="primary" htmlType="submit">
+          Submit
+</Button>
+```
+
+
+
+```js
+1.const [form] = Form.useForm();
+  const [, forceUpdate] = useState();
+???
+    通过 Form.useForm 对表单数据域进行交互。
+--------------------------------------------   
+2.<Form
+      {...layout}
+      name="basic"
+      initialValues={{ remember: true }}			???	-->name=remember默认勾选
+      onFinish={onFinish}							???--->提交成功的回调
+      onFinishFailed={onFinishFailed}				???--->失败的回调
+    >
+```
+
+## 操作表单域的值
+
+```js
+const [form] = Form.useForm();
+设置
+form.setFieldsValue({
+     note: 'Hello world!',
+      gender: 'male',
+});
+--------------------
+获取
+form.getFieldValue('gender')
+
+提交的回调函数onFinsh获取
+ <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+     
+ <Button type="primary" htmlType="submit">
+              Submit
+ </Button>
+const onFinish = values => {
+    console.log('Finish:', values);
+      //{note: "Hi, man!", gender: "male"}
+};
+--------------------
+置空
+const onReset = () => {
+    form.resetFields();
+};
+--------------------
+获取
+const handleonValuesChange = (e) => {
+    console.log(e)//{note: "1"}{gender: "male"}
+    //相当于KeyUp事件 或者 onChange 事件
+     let a = form.getFieldValue('note')
+    console.log(a)
+}
+const handleonFieldsChange = (e) => {
+    // 触摸事件,使用的机会比较少
+    // console.log(e[0])
+}
+
+```
+
+## 修改默认提示信息加Demo
+
+```js
+1.name={['user', 'name']}
+ label="用户名"
+输出的是user底下的name,那么获取值的时候,只能获取这个对象.name底下的字段
+2.validateMessages会修改默认信息,用以配置国际化
+```
+
+## 复杂控件嵌套
+
+```
+<Form.Item name="field" /> 只会对它的直接子元素绑定表单功能，
+例如直接包裹了 Input/Select。
+如果控件前后还有一些文案或样式装点，或者一个表单项内有多个控件，你可以使用内嵌的 Form.Item 完成。
+你可以给 Form.Item 自定义 style 进行内联布局，或者添加 noStyle 作为纯粹的无样式绑定组件
+在多个子控件上面设置
+
+方式1. style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+方式2. noStyle
+这样才能拿到数据
+```
+
+## 自定义表单控件
+
+未做
+
+## 表单数据存储于上层组件
+
+不经常用,并且动态渲染不了,当然可以改造
+
+## 动态增加、减少表单项。
+
+> 官网例子
+
+## 设置默认值 initValue
+
+```js
+<Form
+        layout="horizontal"
+        initialValues={{ city: "", business: "1", use: "" }}
+      >
+        <FormItem 
+          name="city"
+        >
+          <Select style={{ width: 100 }}>
+            <Option value="">全部</Option>
+            <Option value="1">北京市</Option>
+            <Option value="2">天津市</Option>
+            <Option value="3">深圳市</Option>
+          </Select>
+```
+
+
+
+## 多表单联动+模态框
+
+```js
+在模态框当中使用form
+为何在 Modal 中调用 form 控制台会报错？
+这是因为你在调用 form 方法时，Modal 还未初始化导致 form 没有关联任何 Form 组件。你可以通过给 Modal 设置 forceRender 将其预渲染
+forceRender
+ <Modal forceRender visible={visible} onOk={onClose} onCancel={onClose}>
+    <Form form={form}>
+      <Form.Item name="user">
+        <Input />
+      </Form.Item>
+    </Form>
+ </Modal>
+```
+
+
+
+
+
+## login
+
+## register
+
+
+
+# 五/分页
+
+```js
+<Pagination onChange={onChange} total={50} />
+    
+-------------------------
+onChange	页码改变的回调，参数是改变后的页码及每页条数	Function(page, pageSize)	noop
+onShowSizeChange	pageSize 变化的回调	Function(current, size)	noop
+-------------------------
+current			当前页数	number
+defaultCurrent	默认的当前页数	number	1
+------------
+pageSize		每页条数	number
+defaultPageSize	默认的每页条数	number	10
+pageSizeOptions	指定每页可以显示多少条	string[]	['10', '20', '50', '100']
+showQuickJumper	是否可以快速跳转至某页	boolean | { goButton: ReactNode }	false
+showSizeChanger	是否展示 pageSize 切换器，当 total 大于 100 时默认为 true	boolean
+------------
+showTotal		用于显示数据总量和当前数据顺序	Function(total, range)
+total			数据总数	number	0
+------------
+size	当为「small」时，是小尺寸分页	'default' | 'small'	""	
+responsive	当 size 未指定时，根据屏幕宽度自动调整尺寸	boolean
+hideOnSinglePage	只有一页时是否隐藏分页器	boolean	false
+------------
+disabled		禁用分页	boolean
+
+
+
+```
+
+```js
+初始设置
+const params = {
+  page: 1
+}
+---------------------------------
+分页功能Html
+ <Table columns={columns}  dataSource={list} >
+     <Pagination {...pagination} />
+ </Table>
+---------------------------------
+请求
+requestList().then((res) => {
+      /**
+       * 获取基本数据,存储到List当中
+       */
+      setRes(res);
+      let Arr = res.result.item_list.map((item, index) => {
+        item.key = index;
+        return item;
+      })
+      setList([...Arr])
+      /**
+       *  分页操作,利用antd的话,直接把数据放到里面,设置分页就直接分好了
+       */
+      let pageObj = utils.pagination(
+        res,                  //参数1,设置基础数据
+        (current) => {        //参数2,回调函数,也是分页组件里面的onchange事件,当切换页面的时候调用的函数
+          params.page = current;   //设置参数页,用于下面再进行请求指定页面的数据
+          requestList();
+        })
+      console.log('pageObj', pageObj)
+      setpagination(pageObj)
+ });
+---------------------------------
+
+
 
 ```
 
 
 
-## Axios使用JsonP跨域
+# 项目工程化
+
+模块化 require.js就是模块化
+
+组件化 比如轮播,表单,列表
+
+表格
+
+模块化是更加细小的颗粒度,比如起止时间的组合
+
+表格是一个组件,
+
+里面的分页可以做一个模块,
+
+轮播是一个组件,里面的内容效果是一个模块
+
+
+
+接口规范
+
+​	错误拦截,loading处理
+
+<img src="C:\Users\Artificial\AppData\Roaming\Typora\typora-user-images\image-20200409213726838.png" alt="image-20200409213726838" style="zoom: 67%;" />
+
+公共机制
+
+时间格式化
+
+公共样式
+
+背景颜色,sass变量
+
+
+
+# Axios使用JsonP跨域
 
 安装
 
@@ -359,6 +746,68 @@ yarn add jsonp --save
 
 > 模式:通常我们会使用promise再对函数做进一步的封装用以控制错误
 
+```js
+static jsonp (options) {
+    // 再封装一层promise用来做错误处理
+    return new Promise((resolve, reject) => {
+      JsonP(
+        options.url,
+        { param: 'callback' },
+        function (err, response) {
+          //to-do
+          if (response.status === 'success') {
+            resolve(response);
+          } else {
+            reject(response.message);
+          }
+        })
+    })
+  }
+	// 调用方式
+    // axios.jsonp({
+    //   url: ''
+    // }).then((res)=>{})
+```
+
+## 抽取多层Promise
+
+```js
+定义在函数组件外部
+const requestList = () => {
+    //返回的是一个promise对象,只要有promise,就可以一直then下去
+  return axios.ajax({
+    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/open_city',
+    data: {
+      params: {
+        page: params.page
+      }
+    }
+  }).then((res) => {
+    return res
+  })
+}
+函数组件调用
+requestList().then((res) => {
+      console.log('resa :', res);
+});
+
+
+```
+
+## get带参数请求
+
+```js
+axios.get('/open_city_copy', {
+    params: {
+      page: 1
+    }
+  }).then((res) => {
+    console.log('res :', res);
+  })
+```
+
+
+
 # Bug
 
 ### 一,antdUI如果在暗模式下,使用弹出menu出现Bug,走马灯
@@ -367,3 +816,43 @@ yarn add jsonp --save
 
 ### 二,react的严格模式会报警告
 
+
+
+## 三/react-Hook存储对象的话,最多可以访问两层
+
+## 四/ReactHooks
+
+```
+Bug  使用Hooks
+当存储对象的时候,使用null,或者直接不填
+const [resF, setRes] = useState({});
+解决方式一		const [resF, setRes] = useState();
+解决方式二		const [resF, setRes] = useState(null);
+  useEffect(() => {
+    let obj = {
+      a: {
+        b: {
+          c: 'cccccc',
+          f: [1, 2, 3, 4]
+        }
+      }
+    }
+    setRes(obj)
+  }, [])
+  if (resF) {
+    console.log('resF :', resF.a.b.c);
+    resF.a.b.f.map((item) => {
+      console.log(item)
+    })
+  }
+  
+  
+如果使用class组件
+那么两种方式都可以
+objs: {}
+objs: null
+```
+
+# 持续优化
+
+> 1.完成了city城市业务模块 数据的代码拆分,使用hooks来完成模块

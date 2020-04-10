@@ -41,6 +41,10 @@ const menuList = [
       {
         title: '轮播图',
         key: '/ui/carousel',
+      },
+      {
+        title: '分页',
+        key: '/ui/pagination',
       }
     ]
   },

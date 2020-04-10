@@ -13,12 +13,14 @@ import Messages from './pages/ui/message/Message';
 import Tab from './pages/ui/tab/Tab';
 import Gallery from './pages/ui/gallery/Gallery';
 import Carousels from './pages/ui/carousel/Carousel';
+import Pagination from './pages/ui/pagination/Pagination';
 import LoginForm from './pages/form/login/Login';
 import RegisterForm from './pages/form/register/Register';
 import BasicTable from './pages/table/basicTable/BasicTable';
 import HighTable from './pages/table/HighTable/HighTable';
 import City from './pages/city/City';
 import Order from './pages/order/Order'
+import User from './pages/user/User'
 import Common from './Common.js'
 export default function router () {
   return (
@@ -48,12 +50,14 @@ export default function router () {
                   <Route path='/ui/tabs' component={Tab} />
                   <Route path='/ui/gallery' component={Gallery} />
                   <Route path='/ui/carousel' component={Carousels} />
+                  <Route path='/ui/pagination' component={Pagination} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
                   <Route path='/table/basic' component={BasicTable} />
                   <Route path='/table/high' component={HighTable} />
                   <Route path="/city" component={City} />
                   <Route path="/order" component={Order} />
+                  <Route path="/user" component={User} />
                   <Route component={NoMatch} />
                 </Switch>
               </Admin>

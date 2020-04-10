@@ -21,16 +21,27 @@ export default {
       time.getSeconds();
   },
   pagination (data, callback) {
+    console.log('data :', data);
+    console.log('callback', callback)
+    let cur;
     let page = {
+      // 当前页的回调
       onChange: (current) => {
+        cur = current;
         callback(current)
       },
-      current: data.result.page,
+      defaultCurrent: 1,
+      // 当前页
+      current: cur,
+      // 每页条数
       pageSize: data.result.page_size,
-      total: data.result.total,
-      // 用于显示数据的总量和当前的数据
-      showTotal: () => {
-        return `共${data.result.total}条`
+      // 总数
+      total: data.result.item_list.length,
+      // 修改显示
+      showTotal: (total) => {
+        console.log('total :', total);
+        return `共${data.result.item_list.length}条`
+        // return `共${total}条`
       },
       // 是否快速跳转到某页
       showQuickJumper: true

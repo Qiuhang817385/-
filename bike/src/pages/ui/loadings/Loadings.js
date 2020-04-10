@@ -3,7 +3,7 @@ import { Card, Button, Spin, Alert } from 'antd';
 import { LoadingOutlined, PlusCircleTwoTone, SyncOutlined } from '@ant-design/icons';
 import './style.scss';
 export default class Loadings extends Component {
-  // 两种使用span的方式
+  // 两种使用spin的方式
   //  方式一:直接使用icon图标+spin
   //  方式二:使用spin图标+icon+spin
   //  方式二可以自定义描述文案+大小

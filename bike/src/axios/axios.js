@@ -15,6 +15,7 @@ export default class Axios {
         { param: 'callback' },
         function (err, response) {
           //to-do
+          console.log('response :', response);
           if (response.status === 'success') {
             resolve(response);
           } else {
@@ -32,10 +33,10 @@ export default class Axios {
     // 使用loading
     let loading;
     //如果有的接口不希望loading,做判断
-    if (options.data && options.data.isShowLoading !== false) {
-      loading = document.getElementById('ajaxLoading');
-      loading.style.display = 'block'
-    }
+    // if (options.data && options.data.isShowLoading !== false) {
+    //   loading = document.getElementById('ajaxLoading');
+    //   loading.style.display = 'block'
+    // }
     return new Promise((resolve, reject) => {
       // axios的api写法
       axios({
@@ -46,17 +47,16 @@ export default class Axios {
         params: (options.data && options.data.params) || '',
         // then开始
       }).then((res) => {
-
         // 进度条
-        if (options.data && options.data.isShowLoading !== false) {
-          loading = document.getElementById('ajaxLoading');
-          loading.style.display = 'none'
-        }
+        // if (options.data && options.data.isShowLoading !== false) {
+        //   loading = document.getElementById('ajaxLoading');
+        //   loading.style.display = 'none'
+        // }
         // 进度条
         // 状态判断
         if (res.status === 200) {
           let response = res.data;
-          if (response.code === 0) {
+          if (response.code === "0") {
             // resolve(response.result)
             resolve(response)
           } else {
