@@ -21,6 +21,9 @@ import HighTable from './pages/table/HighTable/HighTable';
 import City from './pages/city/City';
 import Order from './pages/order/Order'
 import User from './pages/user/User'
+import Bar from './pages/echarts/bar'
+import Line from './pages/echarts/line'
+import Pie from './pages/echarts/pie'
 import Common from './Common.js'
 export default function router () {
   return (
@@ -56,6 +59,9 @@ export default function router () {
                   <Route path='/table/basic' component={BasicTable} />
                   <Route path='/table/high' component={HighTable} />
                   <Route path="/city" component={City} />
+                  <Route path="/charts/bar" component={Bar} />
+                  <Route path="/charts/line" component={Line} />
+                  <Route path="/charts/pie" component={Pie} />
                   <Route path="/order" component={Order} />
                   <Route path="/user" component={User} />
                   <Route component={NoMatch} />

@@ -15,11 +15,11 @@ export const columns = [{
   dataIndex: 'state',
   render (state) {
     let config = {
-      '1': '咸鱼一条',
-      '2': '风华浪子',
-      '3': '北大才子一枚',
-      '4': '百度FE',
-      '5': '创业者'
+      '1': '开始',
+      '2': '进行中',
+      '3': '结束',
+      '4': '付款',
+      '5': '付款完成'
     }
     return config[state];
   }
@@ -40,7 +40,7 @@ export const columns = [{
     return config[interest];
   }
 }, {
-  title: '爱好',
+  title: '婚否',
   dataIndex: 'isMarried',
   render (isMarried) {
     return isMarried ? '已婚' : '未婚'

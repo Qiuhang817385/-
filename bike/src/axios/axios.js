@@ -54,6 +54,7 @@ export default class Axios {
         // }
         // 进度条
         // 状态判断
+        console.log('res :', res);
         if (res.status === 200) {
           let response = res.data;
           if (response.code === "0") {

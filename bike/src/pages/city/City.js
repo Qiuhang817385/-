@@ -26,21 +26,34 @@ const City = () => {
         return item;
       })
       setList([...Arr])
+      // 分页自己带了,但是还需要自己实现一下思路
+      setpagination({
+        showTotal: () => {
+          return `共${res.result.item_list.length}条`
+          // return `共${total}条`
+        }
+      })
       /**
        *  分页操作,利用antd的话,直接把数据放到里面,设置分页就直接分好了
        */
-      let pageObj = utils.pagination(
-        res,                  //参数1,设置基础数据
-        (current) => {        //参数2,回调函数,也是分页组件里面的onchange事件,当切换页面的时候调用的函数
-          params.page = current;   //设置参数页,用于下面再进行请求指定页面的数据
-          console.log('params :', params);
-          requestList();
-        })
-      console.log('pageObj', pageObj)
-      setpagination(pageObj)
     });
   }, [])
 
+  async function pageGet () {
+    // let pageObj = utils.pagination(res,                  //参数1,设置基础数据
+    //   (current) => {        //参数2,回调函数,也是分页组件里面的onchange事件,当切换页面的时候调用的函数
+    //     params.page = current;   //设置参数页,用于下面再进行请求指定页面的数据
+    //     requestList().then((res) => {
+    //       // console.log('respage :', res);
+    //       let newPage = utils.pagination(res);
+    //       console.log('newPage :', newPage);
+    //       setpagination(newPage)
+    //     });
+    //   })
+    // console.log('pageObj', pageObj)
+    // setpagination(pageObj)
+
+  }
 
   let handleSubmit = () => {
     axios.ajax({
@@ -98,7 +111,7 @@ const City = () => {
 // 请求数据
 const requestList = () => {
   return axios.ajax({
-    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/open_city',
+    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/open_city_copy',
     data: {
       params: {
         page: params.page

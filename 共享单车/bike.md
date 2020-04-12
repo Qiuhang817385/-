@@ -62,6 +62,12 @@ config-overrides.js
 npm install --save @ant-design/icons
 ```
 
+## 安装Echarts
+
+```js
+yarn add echarts echarts-for-react --save
+```
+
 ## 安装react-router
 
 ```js
@@ -658,6 +664,23 @@ disabled		禁用分页	boolean
 
 
 
+表格分页
+ const [pagination, setpagination] = useState(null)
+ 
+ //设置分页属性
+ setpagination({
+        showTotal: () => {
+          return `共${res.result.item_list.length}条`
+          // return `共${total}条`
+       }
+ })
+
+//Table表格
+<Table columns={columns}
+            dataSource={list}
+            pagination={pagination}
+  ></Table>
+
 ```
 
 ```js
@@ -748,37 +771,27 @@ axios有baseUrl参数
 
 # 项目工程化
 
-模块化 require.js就是模块化
+组件化 
 
-组件化 比如轮播,表单,列表
+* 轮播
+* 表单
+* 列表
+* 表格
 
-表格
+模块化
 
-模块化是更加细小的颗粒度,比如起止时间的组合
-
-表格是一个组件,
-
-里面的分页可以做一个模块,
-
-轮播是一个组件,里面的内容效果是一个模块
-
-
-
-接口规范
-
-​	错误拦截,loading处理
-
-<img src="C:\Users\Artificial\AppData\Roaming\Typora\typora-user-images\image-20200409213726838.png" alt="image-20200409213726838" style="zoom: 67%;" />
+* 起止时间
+* 分页
+* loading处理
 
 公共机制
 
-时间格式化
-
-公共样式
-
-背景颜色,sass变量
-
-
+* 时间格式化
+* 公共样式
+* 背景颜色,sass变量
+* axios封装
+* 路由封装
+* 错误拦截
 
 # Axios使用JsonP跨域
 
@@ -942,3 +955,7 @@ const rowSelection = {
 # 持续优化
 
 > 1.完成了city城市业务模块 数据的代码拆分,使用hooks来完成模块
+
+> 2.对city/order/user进行分页控制操作
+
+> 3.封装ajax

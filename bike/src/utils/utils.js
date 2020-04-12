@@ -23,16 +23,19 @@ export default {
   pagination (data, callback) {
     console.log('data :', data);
     console.log('callback', callback)
-    let cur;
+    let curr = parseInt(data.result.page);
+    let cur = curr;
+    console.log('curr :', curr);
+    console.log('cur :', cur);
     let page = {
       // 当前页的回调
       onChange: (current) => {
         cur = current;
-        callback(current)
+        callback && callback(current)
+        // 展示的问题,已经调整切换页面了
       },
-      defaultCurrent: 1,
       // 当前页
-      current: cur,
+      current: parseInt(cur),
       // 每页条数
       pageSize: data.result.page_size,
       // 总数

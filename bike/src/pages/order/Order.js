@@ -5,11 +5,20 @@ import { columns, formList, params, formItemLayout, rowSelection } from './data'
 import './order.scss'
 export default function Order () {
   const [list, setList] = useState([]);
+  const [pagination, setpagination] = useState(null)
   useEffect(() => {
     requestList().then((res) => {
       console.log('res :', res);
       let arrRes = res.result.item_list;
+      arrRes.map((item) => {
+        item['key'] = item.id;
+      })
       setList([...arrRes])
+      setpagination({
+        showTotal: () => {
+          return `共${arrRes.length}条`
+        }
+      })
     })
   }, [])
   let openOrderDetail = () => {
@@ -34,6 +43,7 @@ export default function Order () {
         <div className="content-wrap">
           <Table columns={columns}
             dataSource={list}
+            pagination={pagination}
           // pagination={this.state.pagination}
           // 新
           // rowSelection={rowSelection}
