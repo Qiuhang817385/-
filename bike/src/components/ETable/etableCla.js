@@ -37,20 +37,20 @@ export default class ETable extends Component {
     if (rowSelection == 'checkbox') {
       let checkboxSelectedRowKeys = this.state.selectedRowKeys;
       let checkBoxSelectedItem = this.state.selectedItem || [];
-      if (checkboxSelectedRowKeys.indexOf(record.key) >= 0) {
-        checkboxSelectedRowKeys.splice(checkboxSelectedRowKeys.indexOf(record.key), 1)
+      let judgeId = checkboxSelectedRowKeys.indexOf(record.key)
+      if (judgeId >= 0) {
+        checkboxSelectedRowKeys.splice(judgeId, 1);
+        checkBoxSelectedItem.splice(judgeId, 1);
       } else {
-        console.log('typeof rec.key :', typeof record.key);
         checkboxSelectedRowKeys.push(record.key);
-        checkBoxSelectedItem.push(record)
+        checkBoxSelectedItem.push(record);
       }
       console.log('checkboxSelectedRowKeys', checkboxSelectedRowKeys)
       console.log('checkBoxSelectedItem :', checkBoxSelectedItem);
-      // this.setState({
-      //   selectedRowKeys: checkboxSelectedRowKeys,
-      //   selectedItem: checkBoxSelectedItem
-      // })
-      this.updateSelectedItem(checkboxSelectedRowKeys, checkBoxSelectedItem);
+      this.setState({
+        selectedRowKeys: checkboxSelectedRowKeys,
+        selectedItem: checkBoxSelectedItem,
+      })
     } else
     // 单选框单击操作
     {
@@ -76,7 +76,6 @@ export default class ETable extends Component {
     let rowSelection = this.props.rowSelection;
     console.log('rowSelection :', typeof rowSelection[0]);
     if (rowSelection == 'checkbox') {
-
       this.setState({
         selectedRowKeys,
         selectedItem: selectedRows
@@ -121,6 +120,7 @@ export default class ETable extends Component {
     // this.setState({
     //   selectedRowKeys
     // })
+    console.log(' 刷新之后:', this.state.selectedRowKeys);
     const rowSelection = {
       // 单选
       type: 'radio',

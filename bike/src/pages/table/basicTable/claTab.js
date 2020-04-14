@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Utils from './../../../utils/utils';
-import ETable from './../../../components/ETable/etable copy';
+import ETable from '../../../components/ETable/etableFun.js';
 import axios from '../../../axios/axios';
 import { Table, Tag, Card, Spin, Button, Modal, message } from 'antd';
 import { columns, columns2 } from './columns';
@@ -34,7 +34,7 @@ export default class Cll extends Component {
       <>
         <Card className="card-wrap" title="自定义">
           <ETable
-            rowSelection='checkbox'
+            // rowSelection='checkbox'
             dataSource={this.state.listData}
             columns={columns2}
           />

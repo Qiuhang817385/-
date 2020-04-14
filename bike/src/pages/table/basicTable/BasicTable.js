@@ -64,6 +64,7 @@ export default function BasicTable () {
     if (selectedRowKeys22.indexOf(rec.key) >= 0) {
       //删除
       selectedRowKeys22.splice(selectedRowKeys22.indexOf(rec.key), 1);
+      selectItem22.splice(selectedRowKeys22.indexOf(rec.key), 1)
     } else {//增加
       //表格内，所有被选中数据的，key的集合
       console.log('typeof rec.key :', typeof rec.key);
