@@ -1,45 +1,67 @@
-import React from 'react'
-import { Input, Select, Form, Button, CheckBox, Radio } from 'antd';
-import utils from '../../utils/utils'
+import React, { Fragment } from 'react'
+import { Input, Select, Form, Button, Checkbox, Radio, DatePicker } from 'antd';
+import locale from 'antd/es/date-picker/locale/zh_CN';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { RangePicker } = DatePicker;
+
+
+/**
+ * 获取表单数据的集合
+ *  getFieldValue
+ *  getFieldsValue
+ */
+// const [form] = Form.useForm();
+
 export default class BaseForm extends React.Component {
-  // 表逻辑封装
-  formItemList = (type, name, label, placeholder, list, initialValues, width) => {
-    let form = {
-      "select": <FormItem
-        name={name}
-        label={label}>
-        <Select
-          placeholder={placeholder}
-          style={{ width: width }}>
-          {/* 获取表逻辑结构 */}
-          {utils.getOptionList(list)}
-        </Select>
-      </FormItem>
-      ,
-    }
-    return form[type];
+  formRef = React.createRef();
+  // 提交表单且数据验证成功后回调事件
+  onFinish = (fieldsValue) => {
+    const rangeTimeValue = fieldsValue['range-time-picker'];
+    const values = {
+      ...fieldsValue,
+      'rangeTimePicker': [
+        rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+        rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+      ],
+    };
+    console.log('Received values of form: ', values);
+    /**
+     * 调用父级的方法
+     */
+    this.props.filterSubmit(values)
+  }
+  /**
+   * 正常点击按钮
+   */
+  onClick = () => {
+    console.log('点击')
+  }
+  /**
+   * 重置按钮
+   */
+  onReset = () => {
+    console.log('重置');
+    this.formRef.current.resetFields();
   }
   initFormList = () => {
     let arr = []
-    // getFieldValue
-    // getFieldsValue
-    // 值
     // const getField = this.props.form;
     // 结构
     const formList = this.props.formList;
     console.log('formList :', formList);
     if (formList && formList.length) {
-      formList.forEach((item, index) => {
+      formList.forEach((item) => {
         let name = item.name || '';
         let type = item.type;
         let label = item.label;
         let placeholder = item.placeholder;
         let list = item.list;
-        let initialValues = item.initialValues || '';
         let width = item.width;
-        arr.push(this.formItemList(type, name, label, placeholder, list, initialValues, width));
+        let options = item.options;
+        arr.push(formItemList(type, name, label, placeholder, list, width, options));
+        // arr.push(formItemList({ ...item }));
       })
     }
     console.log('arr :', arr);
@@ -47,14 +69,83 @@ export default class BaseForm extends React.Component {
   }
   render () {
     return (
-      <Form initialValues={{ ...this.props.initValue }} layout="inline">
+      <Form ref={this.formRef} onFinish={this.onFinish} initialValues={{ ...this.props.initValue }} layout="inline">
         {/* 动态生成表单 */}
         {
-          this.initFormList().map((item) => {
-            return item
+          this.initFormList().map((item, index) => {
+            return <Fragment key={index}>{item}</Fragment>
           })
         }
+        <FormItem>
+          <Button type="primary" htmlType="submit">
+            submit提交按钮
+            </Button>
+          <Button htmlType="button" onClick={this.onClick}>
+            正常点击按钮
+              </Button>
+          <Button htmlType="button" onClick={this.onReset}>
+            重置
+          </Button>
+        </FormItem>
       </Form>
     )
   }
+}
+
+/**
+ * 封装option集合
+ * @param {option表数据} data 
+ */
+let getOptionList = (data) => {
+  if (!data) {
+    return [];
+  }
+  let options = [] //[<Option value="0" key="all_key">全部</Option>];
+  data.map((item) => {
+    options.push(<Option value={item.id} key={item.id}>{item.name}</Option>)
+  })
+  return options;
+}
+/**
+ * 表逻辑封装
+ * @param {表单类型}} type 
+ * @param {唯一标识id} name 
+ * @param {文字提示} label 
+ * @param {默认值} placeholder 
+ * @param {表单数据} list 
+ * @param {宽度} width 
+ */
+let formItemList = (type, name, label, placeholder, list, width, options) => {
+  let form = {
+    "select": <FormItem name={name} label={label}>
+      <Select placeholder={placeholder} style={{ width: width }}>
+        {getOptionList(list)}
+      </Select>
+    </FormItem>,
+    'input': <FormItem name={name} label={label}>
+      <Input type="text" placeholder={placeholder} />
+    </FormItem>,
+    'checkbox': <FormItem name={name} label={label}>
+      <Checkbox.Group onChange={onChange} options={options} defaultChecked={true} ></Checkbox.Group>
+    </FormItem>,
+    '时间控件': <FormItem name={name} label={label}>
+      <RangePicker showTime locale={locale} format="YYYY-MM-DD HH:mm:ss" onChange={onRangeChange} />
+    </FormItem>,
+  }
+  return form[type];
+}
+/**
+ * checkBox逻辑
+ * @param {事件对象} e 
+ */
+let onChange = (checkedValues) => {
+  console.log(`checkedValues = ${checkedValues}`);
+}
+/**
+ * 范围时间控件回调
+ * @param {moment} date 
+ * @param {正常时间} dateString 
+ */
+let onRangeChange = (date, dateString) => {
+  console.log('dateString :', dateString);
 }

@@ -14,6 +14,7 @@ const menuList = [
         title: '按钮',
         key: '/ui/buttons',
       },
+
       {
         title: '弹框',
         key: '/ui/modals',
@@ -45,6 +46,18 @@ const menuList = [
       {
         title: '分页',
         key: '/ui/pagination',
+      },
+      {
+        title: '复选框',
+        key: '/ui/checkboxs',
+      },
+      {
+        title: '时间控件',
+        key: '/ui/timepicker',
+      },
+      {
+        title: '穿梭框',
+        key: '/ui/transfer',
       }
     ]
   },

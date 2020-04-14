@@ -78,7 +78,12 @@ export default class Axios {
 
 
   static axiosGet (options) {
-    let baseApi = "http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/"
+    let baseApi;
+    if (options.isMock) {
+      baseApi = "http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/"
+    } else {
+      baseApi = "http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/"
+    }
     return new Promise((resolve, reject) => {
       axios({
         url: options.url,
@@ -106,4 +111,31 @@ export default class Axios {
       })
     })
   }
+
+
+  /**
+   * 业务逻辑请求封装
+   * 可以把this传递给这个函数,这样这个函数就可以是this里面的setState方法了
+   * 我的组件使用的是useHook,所以可以新增一个参数判断是函数组件还是类组件,然后进行数据存储
+   */
+  static requestList (_this, url, params, isMock) {
+    let data = {
+      params, isMock
+    }
+    this.ajax({
+      url, data
+    }).then((data) => {
+      if (data && data.result) {
+        let list = data.result.item_list.map((item, index) => {
+          item.key = index;
+          return item;
+        });
+        _this.setState({
+          list
+          // 分页
+        })
+      }
+    })
+  }
+
 }

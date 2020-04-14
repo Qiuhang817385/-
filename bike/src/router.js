@@ -13,7 +13,10 @@ import Messages from './pages/ui/message/Message';
 import Tab from './pages/ui/tab/Tab';
 import Gallery from './pages/ui/gallery/Gallery';
 import Carousels from './pages/ui/carousel/Carousel';
+import Checkboxs from './pages/ui/checkbox/checkbox';
 import Pagination from './pages/ui/pagination/Pagination';
+import Timepicker from './pages/ui/timepicker/timepicker';
+import Transfers from './pages/ui/transfer/transfer';
 import LoginForm from './pages/form/login/Login';
 import RegisterForm from './pages/form/register/Register';
 import BasicTable from './pages/table/basicTable/BasicTable';
@@ -24,6 +27,7 @@ import User from './pages/user/User'
 import Bar from './pages/echarts/bar'
 import Line from './pages/echarts/line'
 import Pie from './pages/echarts/pie'
+import Permissions from './pages/permission/permissions'
 import Common from './Common.js'
 export default function router () {
   return (
@@ -54,11 +58,15 @@ export default function router () {
                   <Route path='/ui/gallery' component={Gallery} />
                   <Route path='/ui/carousel' component={Carousels} />
                   <Route path='/ui/pagination' component={Pagination} />
+                  <Route path='/ui/checkboxs' component={Checkboxs} />
+                  <Route path='/ui/timepicker' component={Timepicker} />
+                  <Route path='/ui/transfer' component={Transfers} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
                   <Route path='/table/basic' component={BasicTable} />
                   <Route path='/table/high' component={HighTable} />
                   <Route path="/city" component={City} />
+                  <Route path="/permission" component={Permissions} />
                   <Route path="/charts/bar" component={Bar} />
                   <Route path="/charts/line" component={Line} />
                   <Route path="/charts/pie" component={Pie} />

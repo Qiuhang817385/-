@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Tag, Card, Spin, Button, Modal, message } from 'antd';
 import { columns, columns2 } from './columns';
+import ClaTab from './claTab'
 import { data } from './data'
 import axios from '../../../axios/axios'
 import './style.scss'
@@ -14,6 +15,7 @@ export default function BasicTable () {
   const rowSelection = {
     type: 'radio',
     selectedRowKeys,
+    // 单选框自身的方法
     onChange: (selectedRowKeys, selectedRows) => {
       rowSelectChange(selectedRowKeys, selectedRows)
     }
@@ -22,6 +24,11 @@ export default function BasicTable () {
     setSelectedRowKeys(selectedRowKeys);
     setselectItem(selectedRows)
   }
+  /**
+   * 单选表格点击方法
+   * @param {记录} record 
+   * @param {*} index 
+   */
   let handleClick = (record, index) => {
     console.log('index :', index);
     let selectKey = [index + 1];
@@ -39,6 +46,7 @@ export default function BasicTable () {
     type: 'checkbox',
     // 细节,第一个参数必须是selectedRowKeys
     selectedRowKeys: selectedRowKeys22,
+    // 复选框自身的方法
     onChange: (selected, selectedRow22) => {
       console.log('selectedRowKeys :', selected);
       rowSelectChange22(selected, selectedRow22)
@@ -48,15 +56,22 @@ export default function BasicTable () {
     setSelectedRowKeys22([...s2]);
     setselectItem22([...s2Rows])
   }
+  /**
+   * 复选表格点击方法
+   */
   let handleClick22 = (rec) => {
-    console.log('rec :', rec);
+    console.log('rec :', rec);//{id: 1, username: "赵敏", sex: 2, state: 3, interest: 4, …}
     if (selectedRowKeys22.indexOf(rec.key) >= 0) {
+      //删除
       selectedRowKeys22.splice(selectedRowKeys22.indexOf(rec.key), 1);
-    } else {
+    } else {//增加
+      //表格内，所有被选中数据的，key的集合
+      console.log('typeof rec.key :', typeof rec.key);
       selectedRowKeys22.push(rec.key);
-      selectItem22.push(rec)
+      //表格内，所有被选中数据的，集合
+      selectItem22.push(rec);
     }
-    setSelectedRowKeys22(() => [...selectedRowKeys22]);
+    setSelectedRowKeys22([...selectedRowKeys22]);
     setselectItem22(selectItem22)
   }
   //初始化数据
@@ -97,20 +112,29 @@ export default function BasicTable () {
       </Card>
       <Card className='card-wrap' title="动态表格+Loading状态" >
         <Spin spinning={listData.length === 0 ? true : false}>
-          <Table columns={columns2} pagination={false} dataSource={listData} />
+          <Table pagination columns={columns2} pagination={true} dataSource={listData} />
         </Spin>
       </Card>
       <Card className='card-wrap' title="单选表格" >
         <Spin spinning={listData.length === 0 ? true : false}>
-          <Table onRow={(record, index) => { return { onClick: () => { handleClick(record, index) } } }} columns={columns2} rowSelection={{ ...rowSelection }} pagination={false} dataSource={listData} />
+          <Table onRow={(record, index) => { return { onClick: () => { handleClick(record, index) } } }}
+            columns={columns2}
+            // 设置单选还是多选-单选
+            rowSelection={{ ...rowSelection }}
+            pagination={true} dataSource={listData} />
         </Spin>
       </Card>
       <Card className='card-wrap' title="多选表格" >
         <Spin spinning={listData.length === 0 ? true : false}>
           <Button onClick={handleDelete}>删除</Button>
-          <Table onRow={(record, index) => { return { onClick: () => { handleClick22(record, index) } } }} columns={columns2} rowSelection={{ ...checkMore }} pagination={false} dataSource={listData} />
+          <Table onRow={(record, index) => { return { onClick: () => { handleClick22(record, index) } } }}
+            columns={columns2}
+            // 设置单选还是多选-多选
+            rowSelection={{ ...checkMore }}
+            pagination={true} dataSource={listData} />
         </Spin>
       </Card>
+      <ClaTab></ClaTab>
     </>
   )
 }
@@ -123,7 +147,6 @@ async function getData () {
   })
   let result = await res.result;
   return result
-
 }
 
 // let request = () => {

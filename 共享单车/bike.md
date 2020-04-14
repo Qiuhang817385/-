@@ -1,3 +1,5 @@
+
+
 ## 创建项目
 
 ```js
@@ -107,7 +109,19 @@ yarn add redux-saga
 yarn add axios
 ```
 
+###### -------------2020年4月13号-开始
 
+##  安装moment
+
+```js
+yarn add moment
+
+后续使用需要继续学习,包括国际化???
+```
+
+
+
+###### -------------2020年4月13号-结束
 
 ## 什么是框架  是mvc  mv* 是react库和周边生态共同构成的一个框架
 
@@ -577,9 +591,17 @@ const handleonFieldsChange = (e) => {
 这样才能拿到数据
 ```
 
-## 自定义表单控件
+###### -------------2020年4月13号-开始
 
-未做
+## 表单封装控件
+
+```js
+
+```
+
+
+
+###### -------------2020年4月13号-结束
 
 ## 表单数据存储于上层组件
 
@@ -767,6 +789,234 @@ axios有baseUrl参数
    调用useState方法,一定会渲染DOM
 ```
 
+###### -------------2020年4月13号-开始
+
+# 七/复选框
+
+```js
+Checkbox
+
+checked	指定当前是否选中	boolean
+defaultChecked	初始是否选中	boolean
+indeterminate	设置 indeterminate 状态，只负责样式控制	boolean
+onChange	变化时回调函数
+
+Checkbox Group#
+
+defaultValue	默认选中的选项
+disabled	整组失效
+name	CheckboxGroup 下所有 input[type="checkbox"] 的 name 属性
+options	指定可选项
+value	指定选中的选项
+onChange	变化时回调函数
+
+interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+  
+  //选中所有---->未看
+```
+
+
+
+# 八/时间控件
+
+## 国际化配置
+
+```js
+默认配置为 en-US，如果你需要设置其他语言，推荐在入口处使用我们提供的国际化组件，详见：ConfigProvider 国际化。
+
+如有特殊需求（仅修改单一组件的语言），请使用 locale 参数，参考：默认配置。
+/////////////////////////全局配置国际化
+import zhCN from 'antd/es/locale/zh_CN';
+
+<DatePicker locale={locale} />;
+// 默认语言为 en-US，如果你需要设置其他语言，推荐在入口文件全局设置 locale
+ <ConfigProvider locale={zhCN}>
+        <div className="App">
+          {this.props.children}
+        </div>
+</ConfigProvider>
+//////////////////////////////////////日期
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+<DatePicker defaultValue={moment('2015-01-01', 'YYYY-MM-DD')} />;
+```
+
+
+
+```js
+不可选日期和时间
+{/* 可用 disabledDate 和 disabledTime 分别禁止选择部分日期和时间，
+        其中 disabledTime 需要和 showTime 一起使用。 */}
+
+明天接着看API
+```
+
+```js
+共同API
+disabledDate	不可选择的日期
+picker	设置选择器类型	date | week | month | quarter (4.1.0)(季度) | year
+bordered={false} 	边框
+locale={locale}  	国际化
+onChange={onChange}	选择之后的回调
+dateRender	自定义日期单元格的内容	function(currentDate: moment, today: moment) => React.ReactNode
+
+// 配合showTime使用,当选中日期的时候,会自动给你选择好时间
+showTime={{
+        hideDisabledOptions: true,
+        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+}}
+
+自定义格式
+const dateFormat = 'YYYY/MM/DD';
+<DatePicker defaultValue={moment('2015/01/01', dateFormat)} format={dateFormat} />
+------------------------------------------------
+DatePicker不可选日期和时间
+////////////////////////
+disabledTime	不可选择的时间	function(date)
+ <DatePicker
+          format="YYYY-MM-DD HH:mm:ss"
+          disabledDate={disabledDate}
+          disabledTime={disabledDateTime}
+          showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+        />
+公共API-->disabledDate
+function disabledDate (current) {
+  // Can not select days before today and today
+  return current && current < moment().endOf('day');
+}
+自身API-->disabledTime
+function disabledDateTime () {
+  return {
+    disabledHours: () => range(0, 24).splice(4, 20),
+    disabledMinutes: () => range(30, 60),
+    disabledSeconds: () => [55, 56],
+  };
+}
+// 不是,是4点到20点之间都不可选
+ disabledHours: () => range(0, 60).splice(4, 20),
+//////////////////
+
+     
+----------------------------------
+RangePicker	
+
+showTime	增加时间选择功能	Object|boolean  时分秒
+
+自定义格式,defaultValue参数是一个数组
+ <RangePicker
+  defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+          format={dateFormat}/>
+  
+
+```
+
+## 回调函数
+
+```js
+回调函数
+datapicker单个时间
+function onChange (date, dateString) {
+    /**
+     * date:moment对象
+     * dateString:正常字符串
+     */
+    console.log(date, dateString);
+}
+
+rangePicker范围时间
+function onRangeChange (date, dateString) {
+    console.log('dateString :', dateString);
+//dateString : (2) ["2020-04-14 11:59:55", "2020-04-22 14:59:50"]
+}
+
+时间类组件的 value 类型为 moment 对象，所以在提交服务器前需要预处理。
+
+  onFinish = (fieldsValue) => {
+      //range-time-picker是picker的name字段
+    const rangeTimeValue = fieldsValue['range-time-picker'];
+    const values = {
+      ...fieldsValue,
+      'range-time-picker': [
+        rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+        rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+      ],
+    };
+    console.log('Received values of form: ', values);
+    
+  }
+```
+
+
+
+```js
+需求:获取起止时间进行筛选???
+    未做
+    2.获取起止时间
+```
+
+
+
+
+
+## Moment
+
+
+
+# 九/穿梭框
+
+```js
+dataSource	数据源，其中的数据将会被渲染到左边一栏中，targetKeys 中指定的除外。
+titles		标题集合，顺序从左至右	['', '']
+targetKeys	显示在右侧框数据的 key 集合	string[]
+showSearch	是否显示搜索框	boolean			可以直接搜索到，内置了
+
+operations	操作文案集合，顺序从上至下	string[]	['>', '<']
+ operations={['to right', 'to left']}
+----------------------
+selectedKeys	设置哪些项应该被选中	string[]
+无论左侧还是右侧,都被填充到这里面当中来了
+
+sourceSelectedKeys-左侧:  (2) ["1", "4"]
+targetSelectedKeys-右侧:  (3) ["2", "5", "8"]
+selectedKeys
+this.state.selectedKeys (5) ["1", "4", "2", "5", "8"]
+----------------------
+render		每行的渲染函数
+	direction	渲染列表的方向
+    disabled	是否禁用列表
+    filteredItems	过滤后的数据
+    onItemSelect	勾选条目
+    onItemSelectAll	勾选一组条目
+    selectedKeys	选中的条目
+footer	底部渲染函数	(props) => ReactNode
+	 footer={this.renderFooter}
+ --------------------
+dataSource左侧数据						右侧数据targetKeys
+
+```
+
+```js
+回调函数
+onChange	选项在两栏之间转移时的回调函数	(targetKeys, direction, moveKeys): void
+onSelectChange	选中项发生改变时的回调函数	
+	(sourceSelectedKeys, targetSelectedKeys): void
+左侧和右侧
+onScroll	选项列表滚动时的回调函数	(direction, event): void
+
+自定义搜索函数
+onSearch={this.handleSearch}
+```
+
+
+
+
+
+###### -------------2020年4月13号-结束
+
 
 
 # 项目工程化
@@ -863,6 +1113,69 @@ axios.get('/open_city_copy', {
   })
 ```
 
+###### ----------------2020年4月14号
+
+## 业务逻辑请求列表封装/外部调用this指向
+
+```js
+新技巧,外部函数当中调用this.setState
+方式1
+  /**
+   * 业务逻辑请求封装
+   * 可以把this传递给这个函数,这样这个函数就可以是this里面的setState方法了
+   * 我的组件使用的是useHook,所以可以新增一个参数判断是函数组件还是类组件,然后进行数据存储
+   */
+  static requestList (_this, url, params, isMock) {
+    let data = {
+      params, isMock
+    }
+    this.ajax({
+      url, data
+    }).then((data) => {
+      if (data && data.result) {
+        let list = data.result.item_list.map((item, index) => {
+          item.key = index;
+          return item;
+        });
+        _this.setState({
+          list
+          // 分页
+        })
+      }
+    })
+  }
+调用
+在类组件当中调用
+requestList (this, url, params, isMock)
+-----------------------------------------------
+方式2
+封装的工具类
+ updateSelectedItem (selectedRowKeys, selectedRows, selectedIds) {
+    if (selectedIds) {
+      this.setState({
+        selectedRowKeys,
+        selectedIds: selectedIds,
+        selectedItem: selectedRows
+      })
+    } else {
+      this.setState({
+        selectedRowKeys,
+        selectedItem: selectedRows
+      })
+    }
+  },
+ 
+ 调用
+ 
+ Utils.updateSelectedItem.bind(this)
+      
+
+```
+
+
+
+###### ----------------2020年4月14号
+
 
 
 # Bug
@@ -952,6 +1265,45 @@ const rowSelection = {
   }
 ```
 
+###### ----------------2020年4月14号
+
+## 五/表单封装和无限刷新
+
+```js
+封装的表单
+ <ETable
+    // rowSelection='checkbox'
+    selectedRowKeys={this.state.selectedRowKeys22}
+    dataSource={this.state.listData}
+    columns={columns2}
+  />
+ 
+ ETable组件
+
+ 初始化	InitTable = () => {}
+ 调用
+<div>
+    {/* {this.node} */}
+    {this.InitTable()}
+</div>
+
+问题
+如果在InitTable当中调用this.setState
+那么表单会无限刷新调用render
+
+原因,调用this.setState的时候会调用render
+render之后又会调用this.InitTable()
+陷入死循环
+
+解决方法
+不使用this.setState
+
+封装成方法放到外面
+
+```
+
+
+
 # 持续优化
 
 > 1.完成了city城市业务模块 数据的代码拆分,使用hooks来完成模块
@@ -959,3 +1311,41 @@ const rowSelection = {
 > 2.对city/order/user进行分页控制操作
 
 > 3.封装ajax
+
+关于封装的ID
+
+```js
+if (rowSelection == 'checkbox') {
+      // 这个ids好像没有用啊----->这个ids相当于自己的key值,也相当于id值
+      // 加上吧,以防止没有这个值,这踏马赋值成一样的了,这不废话了吗,为啥不直接用id?
+      // 这个id真 的 没用
+      selectedRows.map((item) => {
+        selectedIds.push(item.id);
+      });
+      this.setState({
+        selectedRowKeys,
+        selectedIds: selectedIds,
+        selectedItem: selectedRows
+      });
+}
+```
+
+
+
+# Tip
+
+```js
+ 1.// 字符串转换成数字的方法
+  // console.log('+item.key :', typeof +item.key);
+  return +item.key % 3 > 1
+
+在字符串前面写一个+号
+
+2.
+```
+
+
+
+
+
+###### ----------------2020年4月14号

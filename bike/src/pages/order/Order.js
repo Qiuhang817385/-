@@ -11,37 +11,7 @@ export default function Order () {
     city: '0',
     order_status: '0'
   }
-  const formList = [
-    {
-      name: 'city',
-      type: 'select',
-      label: '城市',
-      placeholder: '全部',
-      list: [
-        { id: '0', name: '全部' },
-        { id: '1', name: '北京' },
-        { id: '2', name: '河北' }
-      ],
-      initialValues: '0',
-      width: 100
-    },
-    {
-      type: 'timeComponent',
-    },
-    {
-      name: 'order_status',
-      type: 'select',
-      label: '订单状态',
-      placeholder: '全部',
-      list: [
-        { id: '0', name: '全部' },
-        { id: '1', name: '进行中' },
-        { id: '2', name: '结束' }
-      ],
-      initialValues: '0',
-      width: 100
-    },
-  ]
+
   useEffect(() => {
     requestList().then((res) => {
       console.log('res :', res);
@@ -61,14 +31,24 @@ export default function Order () {
   }
   let handleConfirm = () => {
   }
+  /**
+   * 父级基础组件的方法
+   */
+  let handleFilter = (params) => {
+    // this.params = params;
+    console.log('params', params)
+    // 把params传递给本地的params,已经有一个分页了, 然后请求数据
+  }
   return (
     <>
       <Card className="card-wrapper">
         <BaseForm
           formList={formList}
           initValue={initValue}
+          filterSubmit={handleFilter}
         ></BaseForm>
       </Card>
+
       <Card className="card-wrapper" style={{ marginTop: 10 }}>
         <Button onClick={openOrderDetail}>
           订单详情
