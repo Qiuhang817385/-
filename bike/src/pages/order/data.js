@@ -71,44 +71,57 @@ export const rowSelection = {
   type: 'radio',
   // selectedRowKeys
 }
-export const formList = [
-  {
-    name: 'city',
-    type: 'select',
-    label: '城市',
-    placeholder: '全部',
-    list: [
-      { id: '0', name: '全部' },
-      { id: '1', name: '北京' },
-      { id: '2', name: '河北' }
-    ],
-    width: 100
+export const formList = {
+  initValue: {
+    city: '0',
+    order_status: '0'
   },
-  {
-    type: '时间控件',
-    label: '订单时间',
-    name: 'range-time-picker'
-  },
-  {
-    name: 'order_status',
-    type: 'select',
-    label: '订单状态',
-    placeholder: '全部',
-    list: [
-      { id: '0', name: '全部' },
-      { id: '1', name: '进行中' },
-      { id: '2', name: '结束' }
-    ],
-    width: 100
-  },
-  {
-    name: 'check',
-    type: 'checkbox',
-    label: '复选',
-    placeholder: '',
-    list: [
-    ],
-    width: 100,
-    options: ['Apple', 'Pear', 'Orange']
-  },
-]
+  formList: [
+
+    {
+      name: 'city',
+      type: 'select',
+      label: '城市',
+      placeholder: '全部',
+      list: [
+        { id: '0', name: '全部' },
+        { id: '1', name: '北京' },
+        { id: '2', name: '河北' }
+      ],
+      width: 100
+    },
+    {
+      type: 'rangepicker',
+      label: '订单时间',
+      name: 'range-picker',
+      width: 250
+    },
+    // {
+    //   type: 'datepicker',
+    //   label: '订单时间2',
+    //   name: 'date-picker'
+    // },
+    {
+      name: 'order_status',
+      type: 'select',
+      label: '订单状态',
+      placeholder: '全部',
+      list: [
+        { id: '0', name: '全部' },
+        { id: '1', name: '进行中' },
+        { id: '2', name: '结束' }
+      ],
+      width: 100
+    },
+    // {
+    //   name: 'check',
+    //   type: 'checkbox',
+    //   label: '复选',
+    //   placeholder: '',
+    //   list: [
+    //   ],
+    //   width: 100,
+    //   options: ['Apple', 'Pear', 'Orange']
+    // },
+  ]
+}

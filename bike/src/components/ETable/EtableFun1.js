@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table } from 'antd'
+import { Table, Spin } from 'antd'
 /**
  * 需要传递的参数
  * getItem/getList
@@ -15,6 +15,11 @@ export default function ETable (props) {
 
   const [pagination, setpagination] = useState(null)
   let getItem = (val) => {
+    if (Array.isArray(val)) {
+      if (!val[0]) {
+        val.splice(0, 1)
+      }
+    }
     return val;
   }
   // 分页
@@ -46,16 +51,17 @@ export default function ETable (props) {
     //复选框单击操作
     if (rowSelection == 'checkbox') {
       // selectedItem = [];
-      let judgeId = selectedRowKeys.indexOf(record.key);
-      if (judgeId >= 0) {
-        selectedRowKeys.splice(judgeId, 1);
-        // selectedItemCheck.splice(judgeId, 1);
-      } else {
-        selectedRowKeys.push(record.key);
-        selectedItemCheck.push(record);
-      }
-      setSelectedRowKeys([...selectedRowKeys])
-      setSelectedItemCheck(selectedItemCheck);
+      // let judgeId = selectedRowKeys.indexOf(record.key);
+      // if (judgeId >= 0) {
+      //   selectedRowKeys.splice(judgeId, 1);
+      //   // selectedItemCheck.splice(judgeId, 1);
+      // } else {
+      //   selectedRowKeys.push(record.key);
+      //   selectedItemCheck.push(record);
+      // }
+      // setSelectedRowKeys([...selectedRowKeys])
+      // setSelectedItemCheck(selectedItemCheck);
+      console.log('功能已经取消~!')
     } else
     // 单选框单击操作
     {
@@ -64,7 +70,6 @@ export default function ETable (props) {
       if (selectedRowKeys && selectedRowKeys[0] == index + 1) {
         return;
       }
-      console.log('selectKey :', selectKey);
       setSelectedRowKeys(selectKey)
       setSelectedItem(record || {})
     }
@@ -77,7 +82,9 @@ export default function ETable (props) {
     if (rowSelection == 'checkbox') {
       console.log('selectedRowKeys :', selectedRowKeys);
       console.log('selectedRows :', selectedRows);
-
+      if (!selectedRows[0]) {
+        selectedRows.splice(0, 1);
+      }
       setSelectedRowKeys([...selectedRowKeys])
       setSelectedItemCheck([...selectedRows])
     } else {
@@ -94,6 +101,9 @@ export default function ETable (props) {
     selectedRows.forEach((item, i) => {
       selectKey.push(i);
     });
+    // if (!selectKey[0]) {
+    //   selectKey.splice(0, 1);
+    // }
     setSelectedItemCheck([...selectedRows])
     setSelectedRowKeys([...selectKey])
   }
@@ -123,21 +133,23 @@ export default function ETable (props) {
 
     let pagi_nation = props.pagination;
 
-    return <Table
-      className="card page-table"
-      bordered
-      {...props}
-      rowSelection={row_selection ? rowSelection : null}
-      onRow={(record, index) => ({
-        onClick: () => {
-          if (!row_selection) {
-            return;
+    return <Spin spinning={props.dataSource.length === 0 ? true : false}>
+      <Table
+        className="card page-table"
+        bordered
+        {...props}
+        rowSelection={row_selection ? rowSelection : null}
+        onRow={(record, index) => ({
+          onClick: () => {
+            if (!row_selection) {
+              return;
+            }
+            onRowClick(record, index)
           }
-          onRowClick(record, index)
-        }
-      })}
-      pagination={pagi_nation ? pagination : false}
-    />
+        })}
+        pagination={pagi_nation ? pagination : false}
+      />
+    </Spin>
   }
   return (
     <>

@@ -5,8 +5,6 @@ import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
-
-
 /**
  * 获取表单数据的集合
  *  getFieldValue
@@ -15,17 +13,35 @@ const { RangePicker } = DatePicker;
 // const [form] = Form.useForm();
 
 export default class BaseForm extends React.Component {
+  // 怎么直接获取到表单的字段,并且返回去?-->利用ref
+  // 每次修改的时候,获取最新的表单值
   formRef = React.createRef();
   // 提交表单且数据验证成功后回调事件
   onFinish = (fieldsValue) => {
-    const rangeTimeValue = fieldsValue['range-time-picker'];
-    const values = {
-      ...fieldsValue,
-      'rangeTimePicker': [
-        rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-        rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-      ],
-    };
+    let values;
+    // name字段
+    // 单选时间控件和范围时间控件目前只能二选一
+    if (fieldsValue['range-picker']) {
+      const rangeValue = fieldsValue['range-picker'];
+      values = {
+        ...fieldsValue,
+        'rangePicker': [
+          rangeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+          rangeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+        ],
+      };
+    } else if (fieldsValue['date-picker']) {
+      const datePicker = fieldsValue['date-picker'];
+      values = {
+        ...fieldsValue,
+        'datePicker':
+          datePicker.format('YYYY-MM-DD HH:mm:ss'),
+      };
+    } else {
+      values = {
+        ...fieldsValue
+      }
+    }
     console.log('Received values of form: ', values);
     /**
      * 调用父级的方法
@@ -50,7 +66,6 @@ export default class BaseForm extends React.Component {
     // const getField = this.props.form;
     // 结构
     const formList = this.props.formList;
-    console.log('formList :', formList);
     if (formList && formList.length) {
       formList.forEach((item) => {
         let name = item.name || '';
@@ -60,33 +75,38 @@ export default class BaseForm extends React.Component {
         let list = item.list;
         let width = item.width;
         let options = item.options;
-        arr.push(formItemList(type, name, label, placeholder, list, width, options));
+        let defaultV = item.defaultV;
+        arr.push(formItemList(type, name, label, placeholder, list, width, options, defaultV));
         // arr.push(formItemList({ ...item }));
       })
     }
-    console.log('arr :', arr);
     return arr;
   }
   render () {
     return (
-      <Form ref={this.formRef} onFinish={this.onFinish} initialValues={{ ...this.props.initValue }} layout="inline">
+      <Form ref={this.formRef}
+        onFinish={this.onFinish}
+        initialValues={{ ...this.props.initValue }}
+        layout={this.props.formLayout ? this.props.formLayout : 'inline'}
+        {...this.props.layout}
+      >
         {/* 动态生成表单 */}
         {
           this.initFormList().map((item, index) => {
             return <Fragment key={index}>{item}</Fragment>
           })
         }
-        <FormItem>
-          <Button type="primary" htmlType="submit">
+        {this.props.submit ? <FormItem>
+          <Button type="primary" htmlType="submit" style={{ marginLeft: '30px' }}>
             submit提交按钮
             </Button>
-          <Button htmlType="button" onClick={this.onClick}>
+          {/* <Button htmlType="button" onClick={this.onClick}>
             正常点击按钮
-              </Button>
-          <Button htmlType="button" onClick={this.onReset}>
+              </Button> */}
+          <Button style={{ marginLeft: '30px' }} htmlType="button" onClick={this.onReset}>
             重置
           </Button>
-        </FormItem>
+        </FormItem> : ''}
       </Form>
     )
   }
@@ -115,7 +135,7 @@ let getOptionList = (data) => {
  * @param {表单数据} list 
  * @param {宽度} width 
  */
-let formItemList = (type, name, label, placeholder, list, width, options) => {
+let formItemList = (type, name, label, placeholder, list, width, options, defaultV) => {
   let form = {
     "select": <FormItem name={name} label={label}>
       <Select placeholder={placeholder} style={{ width: width }}>
@@ -123,13 +143,22 @@ let formItemList = (type, name, label, placeholder, list, width, options) => {
       </Select>
     </FormItem>,
     'input': <FormItem name={name} label={label}>
-      <Input type="text" placeholder={placeholder} />
+      <Input type="text" placeholder={placeholder} style={{ width: width }} />
+    </FormItem>,
+    'password': <FormItem name={name} label={label}>
+      <Input type="password" placeholder={placeholder} style={{ width: width }} />
     </FormItem>,
     'checkbox': <FormItem name={name} label={label}>
-      <Checkbox.Group onChange={onChange} options={options} defaultChecked={true} ></Checkbox.Group>
+      <Checkbox.Group onChange={onCheckBoxChange} options={options} defaultChecked={defaultV} ></Checkbox.Group>
     </FormItem>,
-    '时间控件': <FormItem name={name} label={label}>
-      <RangePicker showTime locale={locale} format="YYYY-MM-DD HH:mm:ss" onChange={onRangeChange} />
+    'radiogroup': <FormItem name={name} label={label}>
+      <Radio.Group onChange={onRadioChange} options={options} defaultValue={defaultV} ></Radio.Group>
+    </FormItem>,
+    'rangepicker': <FormItem name={name} label={label}>
+      <RangePicker style={{ width: width }} showTime locale={locale} format="YYYY-MM-DD HH:mm:ss" onChange={onRangeChange} />
+    </FormItem>,
+    'datepicker': <FormItem name={name} label={label}>
+      <DatePicker style={{ width: width }} showTime locale={locale} format="YYYY-MM-DD HH:mm:ss" onChange={onDateChange} />
     </FormItem>,
   }
   return form[type];
@@ -138,8 +167,15 @@ let formItemList = (type, name, label, placeholder, list, width, options) => {
  * checkBox逻辑
  * @param {事件对象} e 
  */
-let onChange = (checkedValues) => {
+let onCheckBoxChange = (checkedValues) => {
   console.log(`checkedValues = ${checkedValues}`);
+}
+/**
+ * Radio逻辑
+ * @param {事件对象} e 
+ */
+let onRadioChange = (e) => {
+  console.log(`checkedValues = ${e.target.value}`);
 }
 /**
  * 范围时间控件回调
@@ -148,4 +184,14 @@ let onChange = (checkedValues) => {
  */
 let onRangeChange = (date, dateString) => {
   console.log('dateString :', dateString);
+}
+/**
+ * 单个时间控件
+ */
+let onDateChange = (date, dateString) => {
+  /**
+    * date:moment对象
+    * dateString:正常字符串
+    */
+  console.log(date, dateString);
 }

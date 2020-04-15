@@ -58,7 +58,11 @@ const menuList = [
       {
         title: '穿梭框',
         key: '/ui/transfer',
-      }
+      },
+      {
+        title: '描述列表',
+        key: '/ui/description',
+      },
     ]
   },
   {

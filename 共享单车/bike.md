@@ -179,11 +179,26 @@ flex布局和antd的栅格系统实际上用一个就可以了
 
 后期-动态生成权限菜单列表
 
+```js
+布局
+中空效果
+.content {
+  position: relative;
+  padding: 20px;
+  background-color: $colorL;
+  height: 100vh;
+}
+```
+
 
 
 时间:第三方插件库
 
 Moment
+
+
+
+
 
 # 二/React-router
 
@@ -343,11 +358,91 @@ switch是从上到下进行匹配,匹配到则下面不再匹配
 }
 ```
 
+###### ---------2020年4月15号-开始
+
+
+
 ### 重定向Redirect
 
 ```js
 <Redirect to="/admin/home">
 ```
+
+ ### 架构页面的设计
+
+#### 打开新的页面+退出
+
+```js
+打开新的页面
+window.open(`/common/order/detail/${item.id}`, '_blank')
+
+退出
+直接关闭页面
+```
+
+#### 内联页面+返回
+
+```js
+同页跳转
+history.push(`/common/order/detail/${item.id}`)
+
+新页面返回
+import { useParams, useHistory } from 'react-router-dom';
+let history = useHistory();
+<Button type="primary" onClick={() => { history.goBack() }}>返回</Button>
+
+```
+
+### WithRouter
+
+```js
+高阶组件中的withRouter, 
+作用是将一个组件包裹进Route里面, 然后react-router的三个对象history, location, match就会被放进这个组件的props属性中.
+// withRouter实现原理: 
+// 将组件包裹进 Route, 然后返回
+// const withRouter = () => {
+//     return () => {
+//         return <Route component={Nav} />
+//     }
+// }
+
+// 这里是简化版
+const withRouter = ( Component ) => () => <Route component={ Component }/>
+    
+import React from 'react'
+import './nav.css'
+import {
+    NavLink,
+    withRouter
+} from "react-router-dom"
+
+class Nav extends React.Component{
+    handleClick = () => {
+        // Route 的 三个对象将会被放进来, 对象里面的方法可以被调用
+        console.log(this.props);
+    }
+    render() {
+        return (
+            <div className={'nav'}>
+                <span className={'logo'} onClick={this.handleClick}>掘土社区</span>
+                <li><NavLink to="/" exact>首页</NavLink></li>
+                <li><NavLink to="/activities">动态</NavLink></li>
+                <li><NavLink to="/topic">话题</NavLink></li>
+                <li><NavLink to="/login">登录</NavLink></li>
+            </div>
+        );
+    }
+}
+
+// 导出的是 withRouter(Nav) 函数执行
+export default withRouter(Nav)
+
+将span使用withRouter作为一个可点击跳转的Link
+```
+
+
+
+###### ---------2020年4月15号-结束
 
 
 
@@ -441,6 +536,23 @@ notification.open({
 ```js
 这个样式不错
 ```
+
+## 描述框
+
+```js
+响应式 
+<Descriptions
+          title="Responsive Descriptions"
+          bordered
+          column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+>
+    
+column	一行的 DescriptionItems 数量，可以写成像素值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24}
+span	包含列的数量	number	1
+layout	描述布局	horizontal | vertical	不怎么用垂直
+```
+
+
 
 # 四/表单(新版)
 
@@ -964,6 +1076,30 @@ function onRangeChange (date, dateString) {
 
 ## Moment
 
+```js
+引入
+import moment from 'moment';
+
+使用
+result.start_time : 1521865027000
+
+let a = new Date();
+a.setTime(result.start_time);
+let b = moment(a).format('YYYY-MM-DD HH:mm:ss')
+console.log('b :', b);
+b : 2018-03-24 12:17:07
+
+起止时间
+ let startTime = () => {
+    let a = new Date().setTime(result.start_time);
+    return <>{moment(a).format('YY年MM月DD日 /  HH点mm分ss')}</>
+ }
+ let endTime = () => {
+    let a = new Date().setTime(result.end_time);
+    return <>{moment(a).format('YY年MM月DD日 /  HH点mm分ss')}</>
+ }
+```
+
 
 
 # 九/穿梭框
@@ -1009,6 +1145,123 @@ onScroll	选项列表滚动时的回调函数	(direction, event): void
 
 自定义搜索函数
 onSearch={this.handleSearch}
+```
+
+# 十/公共页面开发,每个商品/物品/用户的详情页面
+
+```js
+路由
+<Route path="/common" render={() => {
+            return <Common>
+              <Route path="/common/order/detail/:orderId" component={Login} />
+              <Route path="/common/user/detail/:userId" component={Login} />
+            </Common>
+}} />
+
+common.js
+<Row className="simple-page" >
+  <Col span={24}>
+    <Header menuType="second" />
+  </Col>
+</Row>
+<Row className="content">
+  <Col span={24}>
+    {this.props.children}
+    {/* longnocom */}
+  </Col>
+</Row>
+```
+
+# 十一/CRUD
+
+一个模态框+一个封装表单
+
+动态生成内容
+
+```js
+//封装的数据
+import {  formList, create, read, update, del } from './data'
+const [type, setType] = useState('create')
+let obj = {
+    create, read, update, del
+}
+let handleC = () => {
+    setVisible(true);
+    setType('create')
+    setTitle('创建');
+}
+let handleR = () => {
+    setVisible(true);
+    setType('update')
+    setTitle('编辑');
+}
+let handleU = () => {
+    setVisible(true);
+    setType('read')
+    setTitle('查询');
+}
+let handleD = () => {
+    setVisible(true);
+    setType('del')
+    setTitle('删除');
+}
+
+
+<Modal
+        visible={visible}
+        title={title}
+        okText='确定'
+        cancelText='返回'
+        onCancel={() => setVisible(false)}
+        onOk={() => {
+          //怎么获取到最新的数据???????
+          //函数组件怎么使用到类组件最新的数据--->直接使用ref,太强了
+          let res = baseForm.current.formRef.current.getFieldsValue();
+          onCreate(res)
+        }}
+      >
+ <BaseForm
+      formList={obj[type].formList}
+      initValue={obj[type].initValue}
+      formLayout={obj[type].formLayout}
+      layout={obj[type].layout}
+      ref={baseForm}
+      filterSubmit={onCreate}
+></BaseForm>
+   </Modal>
+```
+
+
+
+增加创建
+
+```js
+
+
+```
+
+编辑修改
+
+```js
+这个模块没有做
+```
+
+查询详情
+
+```js
+
+```
+
+删除
+
+```js
+
+```
+
+
+
+```html
+其实应该在每一个的后面加一个删除按钮和更新按钮
 ```
 
 
@@ -1186,9 +1439,9 @@ requestList (this, url, params, isMock)
 
 ### 二,react的严格模式会报警告
 
-## 三/react-Hook存储对象的话,最多可以访问两层
+### 三/react-Hook存储对象的话,最多可以访问两层
 
-## 四/ReactHooks
+### 四/ReactHooks
 
 ```js
 Bug  使用Hooks
@@ -1264,6 +1517,26 @@ const rowSelection = {
     }
   }
 ```
+
+### 六/表格组件的封装
+
+```js
+在类组件下,单击事件某一行来	修改当前的选中状态,UI不会显示
+
+解决办法
+
+改成函数组件,使用hooks
+```
+
+### 七/
+
+```js
+Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method
+
+还有一个是描述框description的span应该怎么使用
+```
+
+
 
 ###### ----------------2020年4月14号
 
@@ -1341,7 +1614,171 @@ if (rowSelection == 'checkbox') {
 
 在字符串前面写一个+号
 
-2.
+2.计算属性/表结构
+值
+return {
+    '1':'qqq'
+}[state]
+函数
+return {
+    '1':fun(parm)
+}[state](parm)
+```
+
+# 新学快捷键
+
+```js
+met ==>箭头函数
+
+fre→	arrayName.forEach(element => { }
+                          
+prom→	return new Promise((resolve, reject) => { }
+
+cp→	const { } = this.props
+cs→	const { } = this.state
+
+cmmb
+/**
+   * 
+   */
+
+cdm→	componentDidMount = () => { }
+
+ren→	render() { return( ) }
+sst→	this.setState({ })
+ssf→	this.setState((state, props) => return { })
+
+hoc 高阶组件
+```
+
+# 封装
+
+## 表单封装
+
+```js
+
+
+
+----------------------------------
+4.15.对表单进行了时间控件的优化,-->判断有无时间字段
+ onFinish = (fieldsValue) => {
+    let values;
+    if (fieldsValue['range-time-picker']) {
+      const rangeTimeValue = fieldsValue['range-time-picker'];
+      values = {
+        ...fieldsValue,
+        'rangeTimePicker': [
+          rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+          rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+        ],
+      };
+    } else {
+      values = {
+        ...fieldsValue
+      }
+    }
+    console.log('Received values of form: ', values);
+    /**
+     * 调用父级的方法
+     */
+    this.props.filterSubmit(values)
+  }
+ ----------------------------------
+4.15.新增了密码和单个的时间控件
+
+// 单选时间控件和范围时间控件目前只能二选一
+ 'password': <FormItem name={name} label={label}>
+      <Input type="password" placeholder={placeholder} />
+    </FormItem>,
+
+ 'datepicker': <FormItem name={name} label={label}>
+      <DatePicker showTime locale={locale} format="YYYY-MM-DD HH:mm:ss" onChange={onDateChange} />
+</FormItem>,
+
+单个时间控件的格式化函数
+
+if (fieldsValue['date-picker']) {
+      const datePicker = fieldsValue['date-picker'];
+      values = {
+        ...fieldsValue,
+        'datePicker':
+          datePicker.format('YYYY-MM-DD HH:mm:ss'),
+      };
+}
+----------------------------------
+4.15.修改了传递进入的数据结构
+export const formList = {
+  initValue: {
+  },
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名',
+      width: 100
+    }
+  ]
+}
+-----------------------------------
+4.16.新增了Radio-group组件字段
+
+-----------------------------------
+4.16 怎么通过父组件来直接获取子组件的数据
+函数组件let baseForm = useRef(null)
+类组件		this.baseForm = React.creaeRef();
+<BaseForm
+  ref={baseForm/this.baseForm}
+></BaseForm>
+
+let res = baseForm.current.formRef.current.getFieldsValue();
+
+
+
+ 未优化点--->表单的布局
+```
+
+
+
+## 表格封装
+
+```js
+
+
+2.新增加了单选的返回事件getItem
+3.完成对分页属性的基础封装
+4.修复了一个小Bug   
+	单选的返回值--->原生的是数组,现在也修改成了对象-->res[0]
+5.取消了复选的单行点击功能,因为有Bug	--->新版本是EtableFun1
+6.对全选按钮进行了优化,去除了undefined数据
+let getItem = (val) => {
+    if (Array.isArray(val)) {
+      if (!val[0]) {
+        val.splice(0, 1)
+      }
+    }
+    return val;
+}
+7.增加了spin-loading状态
+
+```
+
+## 注意
+
+订单的key需要单独做处理
+
+```js
+arrRes.map((item) => {
+        // 这里的id需要单独做处理,而不是自己的Bug
+        console.log('item.id :', item.id);
+        item['key'] = item.id;				//错误的处理
+})
+
+-->正确的处理
+arrRes.map((item, index) => {
+        // 这里的id需要单独做处理,而不是自己的Bug
+        item['key'] = index + 1;
+})
 ```
 
 
@@ -1349,3 +1786,11 @@ if (rowSelection == 'checkbox') {
 
 
 ###### ----------------2020年4月14号
+
+
+
+
+
+11-1
+
+16分钟

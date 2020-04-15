@@ -16,6 +16,7 @@ import Carousels from './pages/ui/carousel/Carousel';
 import Checkboxs from './pages/ui/checkbox/checkbox';
 import Pagination from './pages/ui/pagination/Pagination';
 import Timepicker from './pages/ui/timepicker/timepicker';
+import Descriptions from './pages/ui/description/descriptions';
 import Transfers from './pages/ui/transfer/transfer';
 import LoginForm from './pages/form/login/Login';
 import RegisterForm from './pages/form/register/Register';
@@ -29,6 +30,8 @@ import Line from './pages/echarts/line'
 import Pie from './pages/echarts/pie'
 import Permissions from './pages/permission/permissions'
 import Common from './Common.js'
+import orderDeatil from './pages/order/detailInline'
+import userDeatil from './pages/user/detail'
 export default function router () {
   return (
     <Router>
@@ -36,13 +39,13 @@ export default function router () {
       <App>
         <Switch>
           <Route path='/login' component={Login} />
+          {/* 公共页面,第三方页面 */}
           <Route path="/common" render={() => {
             return <Common>
-              <Route path="/common/order/detail/:orderId" component={Login} />
+              <Route path="/common/order/detail/:orderId" component={orderDeatil} />
+              <Route path="/common/user/detail/:userId" component={userDeatil} />
             </Common>
-          }
-          }
-          />
+          }} />
           <Route path='/' render={() => {
             return (
               <Admin>
@@ -61,6 +64,7 @@ export default function router () {
                   <Route path='/ui/checkboxs' component={Checkboxs} />
                   <Route path='/ui/timepicker' component={Timepicker} />
                   <Route path='/ui/transfer' component={Transfers} />
+                  <Route path='/ui/description' component={Descriptions} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
                   <Route path='/table/basic' component={BasicTable} />

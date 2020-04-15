@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Button, Table, Form, Select, Modal, message, DatePicker } from 'antd';
 import axios from '../../axios/axios';
-import BaseForm from './../../components/BaseForm/BaseForm'
+import BaseForm from './../../components/BaseForm/BaseForm';
+import ETable from './../../components/ETable/EtableFun1'
 import { columns, formList, params, formItemLayout, rowSelection } from './data'
 import './order.scss'
+import { useHistory } from 'react-router-dom'
+
+
 export default function Order () {
   const [list, setList] = useState([]);
   const [pagination, setpagination] = useState(null);
-  const initValue = {
-    city: '0',
-    order_status: '0'
-  }
+  const [item, setItem] = useState();
+  let history = useHistory();
 
   useEffect(() => {
     requestList().then((res) => {
-      console.log('res :', res);
       let arrRes = res.result.item_list;
-      arrRes.map((item) => {
-        item['key'] = item.id;
+      arrRes.map((item, index) => {
+        // 这里的id需要单独做处理,而不是自己的Bug
+        item['key'] = index + 1;
       })
       setList([...arrRes])
       setpagination({
@@ -28,6 +30,15 @@ export default function Order () {
     })
   }, [])
   let openOrderDetail = () => {
+    if (!item) {
+      Modal.info({
+        title: '信息',
+        content: '请先选择一条订单'
+      })
+      return;
+    }
+    // window.open(`/common/order/detail/${item.id}`, '_blank');
+    history.push(`/common/order/detail/${item.id}`)
   }
   let handleConfirm = () => {
   }
@@ -43,8 +54,8 @@ export default function Order () {
     <>
       <Card className="card-wrapper">
         <BaseForm
-          formList={formList}
-          initValue={initValue}
+          formList={formList.formList}
+          initValue={formList.initValue}
           filterSubmit={handleFilter}
         ></BaseForm>
       </Card>
@@ -52,28 +63,24 @@ export default function Order () {
       <Card className="card-wrapper" style={{ marginTop: 10 }}>
         <Button onClick={openOrderDetail}>
           订单详情
-                    </Button>
+        </Button>
         <Button type="primary" style={{ marginLeft: 10 }} onClick={handleConfirm}>
           结束订单
-                    </Button>
+        </Button>
       </Card>
       <Card className="card-wrapper">
         <div className="content-wrap">
-          <Table columns={columns}
+          <ETable
+            // rowSelection='checkbox'
+            columns={columns}
             dataSource={list}
-            pagination={pagination}
-          // pagination={this.state.pagination}
-          // 新
-          // rowSelection={rowSelection}
-          // onRow={(record, index) => {
-          //     return {
-          //         onClick: () => {
-          //             this.onRowClick(record, index);
-          //         }
-          //     };
-          // }}
-          >
-          </Table>
+            pagination={true}
+            getItem={
+              rec => {
+                setItem(rec)
+              }
+            }
+          ></ETable>
         </div>
       </Card>
     </>

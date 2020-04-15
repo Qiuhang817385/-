@@ -56,3 +56,162 @@ export const columns = [{
   dataIndex: 'time'
 }
 ];
+
+
+
+export const formList = {
+  initValue: {
+  },
+  submit: true,
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名',
+      width: 100
+    },
+    {
+      name: 'pwd',
+      type: 'password',
+      label: '密码',
+      placeholder: '请输入密码',
+      width: 100
+    },
+    {
+      type: 'datepicker',
+      label: '入职时间',
+      name: 'date-picker'
+    }
+  ]
+}
+/**
+ * 增加
+ */
+/* 
+  const options = [
+  { label: 'Apple', value: 'Apple' },
+  { label: 'Pear', value: 'Pear' },
+  { label: 'Orange', value: 'Orange' },
+];
+ */
+export const create = {
+  formLayout: 'horizontal',
+  layout: {
+    labelCol: {
+      span: 6,
+    },
+    wrapperCol: {
+      span: 15,
+    },
+  },
+  initValue: {
+    sex: 'man'
+  },
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '姓名',
+      placeholder: '请输入姓名',
+    },
+    {
+      name: 'sex',
+      type: 'radiogroup',
+      label: '性别',
+      options: [
+        { label: '男', value: '1' },
+        { label: '女', value: '2' },
+      ]
+    },
+    {
+      type: 'datepicker',
+      label: '入职时间',
+      name: 'date-picker'
+    }
+  ]
+}
+/**
+ * 查询
+ */
+export const read = {
+  initValue: {
+  },
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名',
+      width: 100
+    },
+    {
+      name: 'pwd',
+      type: 'password',
+      label: '密码',
+      placeholder: '请输入密码',
+      width: 100
+    },
+    {
+      type: 'datepicker',
+      label: '入职时间',
+      name: 'date-picker'
+    }
+  ]
+}
+/**
+ * 删除
+ */
+export const del = {
+  initValue: {
+  },
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名',
+      width: 100
+    },
+    {
+      name: 'pwd',
+      type: 'password',
+      label: '密码',
+      placeholder: '请输入密码',
+      width: 100
+    },
+    {
+      type: 'datepicker',
+      label: '入职时间',
+      name: 'date-picker'
+    }
+  ]
+}
+/**
+ * 修改
+ */
+export const update = {
+  initValue: {
+  },
+  formList: [
+    {
+      name: 'username',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名',
+      width: 100
+    },
+    {
+      name: 'pwd',
+      type: 'password',
+      label: '密码',
+      placeholder: '请输入密码',
+      width: 100
+    },
+    {
+      type: 'datepicker',
+      label: '入职时间',
+      name: 'date-picker'
+    }
+  ]
+}

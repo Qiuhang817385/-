@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import Utils from './../../../utils/utils';
-import ETable from '../../../components/ETable/etableFun.js';
+import ETable from '../../../components/ETable/EtableFun.js';
 import axios from '../../../axios/axios';
 import { Table, Tag, Card, Spin, Button, Modal, message } from 'antd';
 import { columns, columns2 } from './columns';
 export default class Cll extends Component {
+  constructor(props) {
+    super(props);
+    this.Etable = React.createRef();
+  }
   state = {
     selectedRowKeys22: [],
     listData: [],
+    item: []
   }
   checkMore = {
     type: 'checkbox',
@@ -28,16 +33,32 @@ export default class Cll extends Component {
       })
     })
   }
+  /**
+   * 
+   */
+  hanleClick = () => {
+    console.log(this.state.item)
+  }
+
   render () {
     console.log('object :', this.state.listData);
     return (
       <>
         <Card className="card-wrap" title="自定义">
           <ETable
-            // rowSelection='checkbox'
+            rowSelection='checkbox'
             dataSource={this.state.listData}
             columns={columns2}
+            getList={func => {
+              console.log('func', this);
+              this.setState({
+                item: func
+              })
+              // 调用方法
+              // this.handleClick = func 
+            }}
           />
+          <button onClick={this.hanleClick}>点击</button>
         </Card>
       </>
     )

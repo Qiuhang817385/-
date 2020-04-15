@@ -51,7 +51,6 @@ export default class Header extends Component {
               <img src="/assets/logo-ant.svg" alt="1" />
               <span>通用管理器</span>
             </Col> : ''
-
           }
           <Col span={menuType ? 18 : 24}>
             <span>欢迎,{userName}</span>
