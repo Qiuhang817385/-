@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Card, Button, Row, Col, Modal, Form, Input, Select } from 'antd';
+import { Card, Button, Row, Col, Modal, Form, Input, Select, Tree } from 'antd';
 import './permission.scss'
 import ETable from './../../components/ETable/EtableFun1'
 import { columns } from './data'
-import { Init, Create } from './req'
+import { Init, Create, editRole } from './req'
 import RoleForm from './RoleForm'
-const FormItem = Form.Item;
-const Option = Select.Option;
+import PermEditForm from './PermEditForm'
+
 export default class Permissions extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +16,7 @@ export default class Permissions extends Component {
       // 创建角色
       item_list: [],
       roleItem: null,
+      menuInfo: [],
       isRoleVisible: false,
       // 权限设置
       isPermissionVisible: false,
@@ -32,7 +33,7 @@ export default class Permissions extends Component {
   /**
    * 点击创建角色按钮，显示modal框
    */
-  handleCreate = () => {
+  handleCreateOpen = () => {
     this.setState({
       isRoleVisible: true
     })
@@ -40,7 +41,7 @@ export default class Permissions extends Component {
   /**
    * 创建角色--->确定提交
    */
-  handleRoleSubmit = () => {
+  handleOKRoleSubmit = () => {
     let role = this.roleForm.current.formRef.current.getFieldsValue();
     Create(role).then((res) => {
       if (res.code == '0') {
@@ -57,9 +58,9 @@ export default class Permissions extends Component {
     })
   }
   /**
-   * 权限设置-按钮
+   * 权限设置-打开按钮
    */
-  handlePermission = () => {
+  handlePermissionOpen = () => {
     let item = this.state.roleItem;
     if (!item) {
       Modal.info({
@@ -72,33 +73,62 @@ export default class Permissions extends Component {
     this.permEditForm.current.PermformRef.current.resetFields();
     this.setState({
       isPermissionVisible: true,
+      //  17日,这里是直接掉的真实的接口来进行权限的设置,
+      // 可以进行一个小优化,每次都从本地的一个副本当中来拿到数据,这样就算离线也能显示出来数据
+      // menuInfo: item.menus
+      // 优化---->
+      menuInfo: item.menus
     })
-    // isPermissionVisible
   }
   /**
-   * 权限设置-modal框
+   * 权限设置-modal框确定
    */
-  handlePerEditSubmit = () => {
+  handleOKPerEditSubmit = () => {
+    // 修改状态
+    let formData = this.permEditForm.current.PermformRef.current.getFieldsValue();
+    let item = this.state.roleItem;
+    item.status = formData.status;
+    // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
     this.setState({
-      isPermissionVisible: false
+      isPermissionVisible: false,
+      roleItem: item
+    })
+    let willSendRoleData = formData;
+
+    //获取当前角色id
+    willSendRoleData["Id"] = item.id;
+    willSendRoleData["menus"] = item.menus;
+    editRole(willSendRoleData).then((res) => {
+      if (res.code == '0') {
+        Modal.info({
+          'title': '设置权限',
+          'content': '设置成功!'
+        })
+      }
+      // axios.get(/role/list)刷新一下页面,未做
     })
   }
-
-
+  // ETable返回来的数据
+  getEtableItem = (rec) => {
+    this.setState({
+      roleItem: rec,
+    })
+  }
   render () {
-    const { item_list, roleItem } = this.state;
+    const { item_list, roleItem, menuInfo } = this.state;
     return (
       <>
         <Card className='card-wrap' >
           <Row>
-            <Col span={3}><Button type='primary' onClick={this.handleCreate}>创建角色</Button></Col>
-            <Col span={3}><Button type='primary' onClick={this.handlePermission}>设置权限</Button></Col>
+            <Col span={3}><Button type='primary' onClick={this.handleCreateOpen}>创建角色</Button></Col>
+            <Col span={3}><Button type='primary' onClick={this.handlePermissionOpen}>设置权限</Button></Col>
             <Col span={3}> <Button type='primary'>用户授权</Button></Col>
           </Row>
         </Card>
         <Card className='card-wrap'>
           <ETable
-            getItem={rec => this.setState({ roleItem: rec })}
+            // Bug,不可读取属性,返回来的rec是一个hook属性
+            getItem={rec => { this.getEtableItem(rec) }}
             columns={columns}
             dataSource={item_list}
             pagination={false}
@@ -108,7 +138,7 @@ export default class Permissions extends Component {
         <Modal
           title="创建角色"
           visible={this.state.isRoleVisible}
-          onOk={this.handleRoleSubmit}
+          onOk={this.handleOKRoleSubmit}
           onCancel={() => {
             this.roleForm.current.RoleformRef.current.resetFields();//重置
             this.setState({
@@ -122,7 +152,7 @@ export default class Permissions extends Component {
           forceRender
           title='设置权限'
           visible={this.state.isPermissionVisible}
-          onOk={this.handlePerEditSubmit}
+          onOk={this.handleOKPerEditSubmit}
           onCancel={() => {
             this.setState({
               isPermissionVisible: false
@@ -132,43 +162,22 @@ export default class Permissions extends Component {
           <PermEditForm
             ref={this.permEditForm}
             detailInfo={roleItem || {}}
+            menuInfo={menuInfo}
+            // 子组件调用父组件的方法,进行传值
+            patchMenuInfo={(checkedKeys) => {
+              // 优化点,先修改掉roleItem副本的数组内容,
+              // 因为此时还没有关闭掉页面,所以依然需要修改menuInfo
+              // -->然后render-->获得最新的menuInfo--->再次传递到子组件渲染页面
+              let roleItem = this.state.roleItem;
+              roleItem.menus = checkedKeys
+              this.setState({
+                menuInfo: checkedKeys,
+                roleItem
+              })
+            }}
           ></PermEditForm>
         </Modal>
       </>
     )
-  }
-}
-
-
-class PermEditForm extends Component {
-  PermformRef = React.createRef();
-  render () {
-    // 选中的单行数据
-    const { detailInfo } = this.props
-    console.log('detailInfo :', detailInfo);
-    // console.table(detailInfo);
-    console.log('detailInfo.status :', detailInfo.status);
-    // detailInfo.role_name/status/authorize_user_name/authorize_time/create_time/menus
-    const formItemLayout = {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 18 }
-    };
-    return (<>
-      {/* shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender} */}
-      <Form ref={this.PermformRef} layout="horizontal" initialValues={{
-        status: detailInfo.status
-      }}>
-        <FormItem label="角色名称：" {...formItemLayout}>
-          {/* 详情里面的角色信息名称 */}
-          <Input disabled maxLength="8" placeholder={detailInfo.role_name} />
-        </FormItem>
-        <FormItem label="状态" {...formItemLayout} name='status'>
-          <Select>
-            <Option value={1}>启用</Option>
-            <Option value={0}>停用</Option>
-          </Select>
-        </FormItem>
-      </Form>
-    </>)
   }
 }

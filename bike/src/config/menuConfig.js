@@ -148,6 +148,6 @@ const menuList = [
   {
     title: '权限设置',
     key: '/permission'
-  },
-];
+  }
+]
 export default menuList;

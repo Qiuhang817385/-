@@ -28,3 +28,18 @@ export const Create = (roleData) => {
     return res
   })
 }
+/**
+ * 修改权限
+ */
+export const editRole = (editData) => {
+  return axios.ajax({
+    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/permission/edit',
+    data: {
+      params: {
+        editData
+      }
+    }
+  }).then((res) => {
+    return res
+  })
+}

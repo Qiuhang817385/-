@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import App from './App';
 import Home from './pages/home/Home'
 import Admin from './Admin'
@@ -53,6 +53,7 @@ export default function router () {
                 <Switch>
                   <Route exact path="/" component={Home}></Route>
                   <Route exact path="/home" component={Home}></Route>
+                  <Route path="/home" component={Home}></Route>
                   <Route path='/ui/buttons' component={Buttons} />
                   <Route path='/ui/modals' component={Modals} />
                   <Route path='/ui/loadings' component={Loadings} />
@@ -78,6 +79,7 @@ export default function router () {
                   <Route path="/charts/pie" component={Pie} />
                   <Route path="/order" component={Order} />
                   <Route path="/user" component={User} />
+                  {/* <Redirect to='/home'></Redirect> */}
                   <Route component={NoMatch} />
                 </Switch>
               </Admin>

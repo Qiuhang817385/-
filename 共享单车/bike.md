@@ -440,6 +440,33 @@ export default withRouter(Nav)
 将span使用withRouter作为一个可点击跳转的Link
 ```
 
+### 重定向到首页
+
+```js
+之前
+ <Route path='/' render={() => {
+            return (
+              <Admin>
+                <Switch>
+                  <Route exact path="/" component={Home}></Route>
+                  <Route exact path="/home" component={Home}></Route>
+
+现在
+<Route  path="/home" component={Home}></Route>
+    。
+    。
+    。
+    。
+<Route path="/user" component={User} />
+<Redirect to='/home'></Redirect>
+<Route component={NoMatch} />
+    
+    
+这种解决办法没有第一种好
+```
+
+
+
 
 
 ###### ---------2020年4月15号-结束
@@ -569,6 +596,9 @@ checkedKeys	（受控）选中复选框的树节点
 当设置checkable和checkStrictly，它是一个有checked和halfChecked属性的对象，并且父子节点的选中与否不再关联
 checkStrictly	checkable 状态下节点选择完全受控（父子节点选中状态不再关联）
 selectedKeys	（受控）设置选中的树节点
+
+treeData	treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）
+如果设置了不需要再导入TreeNode了
 ```
 
 ```js
@@ -1306,7 +1336,7 @@ initialValue:userInfo.sex
 其实应该在每一个的后面加一个删除按钮和更新按钮
 ```
 
-###### ----2020年4月16号-结束
+###### ----2020年4月16号
 
 # 十二/核心权限设置
 
@@ -1321,6 +1351,88 @@ initialValue:userInfo.sex
 2.设置权限,给角色来设置响应的权限值
 
 3.用户授权,把用户分配个那个角色
+
+
+
+## 设置权限-树
+
+```js
+1.动态加载出来权限
+
+ treeData={this.tree()}
+遇见的问题是
+// 为什么这里拿不到数据???通过this。setState获取外部表单的数据再更改本地结构，结构没有生效
+// 直接调用函数反而生效了
+2.根据角色的权限，动态的勾选上
+
+checkedKeys={this.props.menuInfo}
+
+这里做的功能，是
+通过父页面的menuInfo={menuInfo}，来动态加载这个角色拥有那些权限
+
+子组件	checkedKeys={this.props.menuInfo} 来获取
+
+当在子菜单当中进行勾选的时候，调用onChenck事件
+onCheck={this.onTreeCheck}
+onTreeCheck = checkedKeys => {
+    console.log('onCheck', checkedKeys);
+    // setCheckedKeys(checkedKeys);
+    // 调用父组件的方法,把改变后的值传递回去
+    // 父组件的方法
+    this.props.patchMenuInfo(checkedKeys)
+  };
+调用父组件的方法，来进行menuInfo的修改
+
+这里进行了优化
+
+patchMenuInfo={(checkedKeys) => {
+          // 优化点,先修改掉roleItem副本的数组内容,
+          // 因为此时还没有关闭掉页面,所以依然需要修改menuInfo
+          // -->然后render-->获得最新的menuInfo--->再次传递到子组件渲染页面
+          let roleItem = this.state.roleItem;
+          roleItem.menus = checkedKeys
+          this.setState({
+              //优化完成
+              //优化完成
+              //优化完成
+            menuInfo: checkedKeys,
+            roleItem
+          })
+}}
+    详细优化点，见下方部分
+    
+    
+3.最后提交
+
+  /**
+   * 权限设置-modal框确定
+   */
+  handleOKPerEditSubmit = () => {
+    // 修改状态
+    let formData = this.permEditForm.current.PermformRef.current.getFieldsValue();
+    let item = this.state.roleItem;
+    item.status = formData.status;
+    // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
+    this.setState({
+      isPermissionVisible: false,
+      roleItem: item
+    })
+    let willSendRoleData = formData;
+
+    //获取当前角色id
+    willSendRoleData["Id"] = item.id;
+    willSendRoleData["menus"] = item.menus;
+    editRole(willSendRoleData).then((res) => {
+      if (res.code == '0') {
+        Modal.info({
+          'title': '设置权限',
+          'content': '设置成功!'
+        })
+      }
+      // axios.get(/role/list)刷新一下页面,未做
+    })
+  }
+```
 
 
 
@@ -1715,6 +1827,56 @@ initialValues	表单默认值，只有初始化以及重置时生效	object
 在modal打开之前，调用resetFields()将表单中的值先清除一遍
 ```
 
+### 十二/Tree的初始数据？
+
+```js
+render函数里面已经有了数据
+
+但是为什么每次打开页面都获取不到？
+```
+
+### 十三/不可读取
+
+```js
+<ETable
+    // Bug,不可读取属性,返回来的rec是一个hook属性，只能读取最外层属性
+	//	修改只能通过state的方式
+    getItem={rec => {
+      	this.getEtableItem(rec)
+    }}
+    columns={columns}
+    dataSource={item_list}
+    pagination={false}
+/>
+```
+
+### 十四/路由修改
+
+```js
+
+    <Route path='/' render={() => {}} 
+    <Route path="/common" render={() => {}}
+
+  如果公共详情页面在/的后面，无论访问首页还是公共组件，都会访问到首页（Switch
+
+解决办法
+<Switch>
+    <Route path="/common"  render={() => {}}
+    <Route path='/' render={() => {}} 
+</Switch>
+
+
+优化，第一次进入管理系统进入的页面
+  <Route path='/' render={() => {
+            return (
+              <Admin>
+                <Switch>
+                  <Route exact path="/" component={Home}></Route>
+                  <Route exact path="/home" component={Home}></Route>
+
+
+```
+
 
 
 
@@ -1743,6 +1905,70 @@ if (rowSelection == 'checkbox') {
         selectedItem: selectedRows
       });
 }
+```
+
+## 权限优化
+
+```js
+/**
+   * 权限设置-打开按钮
+   */
+  handlePermissionOpen = () => {
+    let item = this.state.roleItem;
+    this.permEditForm.current.PermformRef.current.resetFields();
+    this.setState({
+      isPermissionVisible: true,
+      //  17日,这里是直接掉的真实的接口来进行权限的设置,
+      // 可以进行一个小优化,每次都从本地的一个副本当中来拿到数据,这样就算离线也能显示出来数据
+      // menuInfo: item.menus
+      // 优化---->
+      menuInfo: menuInfo的副本---》应该填item.menus，因为再下面直接修改了roleItem对象。
+    })
+    // isPermissionVisible
+  }
+  
+  <PermEditForm
+            ref={this.permEditForm}
+            detailInfo={roleItem || {}}
+            menuInfo={menuInfo}
+            // 子组件调用父组件的方法,进行传值
+            patchMenuInfo={(checkedKeys) => {
+              // 优化点,先修改掉roleItem副本的数组内容,
+              // 因为此时还没有关闭掉页面,所以依然需要修改menuInfo
+              // -->然后render-->获得最新的menuInfo--->再次传递到子组件渲染页面
+              let roleItem = this.state.roleItem;
+              roleItem.menus = checkedKeys
+              this.setState({
+                  //优化完成
+                  //优化完成
+                  //优化完成
+                menuInfo: checkedKeys,
+                roleItem
+              })
+            }}
+          ></PermEditForm> 
+  
+  
+  
+  
+ 优化，修改状态+禁用树形框
+  /**
+   * 权限设置-modal框确定
+   */
+  handleOKPerEditSubmit = () => {
+    // 修改状态
+    let formData = this.permEditForm.current.PermformRef.current.getFieldsValue();
+    let item = this.state.roleItem;
+    item.status = formData.status;
+    // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
+      // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
+      // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
+      // 如果设置成停用,应该禁用整个树形框,或者整个数组清0
+    this.setState({
+      isPermissionVisible: false,
+      roleItem: item
+    })
+  }
 ```
 
 
