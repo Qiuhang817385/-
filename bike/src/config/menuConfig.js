@@ -60,6 +60,10 @@ const menuList = [
         key: '/ui/transfer',
       },
       {
+        title: '树形结构',
+        key: '/ui/tree',
+      },
+      {
         title: '描述列表',
         key: '/ui/description',
       },

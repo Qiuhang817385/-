@@ -18,6 +18,7 @@ import Pagination from './pages/ui/pagination/Pagination';
 import Timepicker from './pages/ui/timepicker/timepicker';
 import Descriptions from './pages/ui/description/descriptions';
 import Transfers from './pages/ui/transfer/transfer';
+import Trees from './pages/ui/tree/tree';
 import LoginForm from './pages/form/login/Login';
 import RegisterForm from './pages/form/register/Register';
 import BasicTable from './pages/table/basicTable/BasicTable';
@@ -65,6 +66,7 @@ export default function router () {
                   <Route path='/ui/timepicker' component={Timepicker} />
                   <Route path='/ui/transfer' component={Transfers} />
                   <Route path='/ui/description' component={Descriptions} />
+                  <Route path='/ui/tree' component={Trees} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
                   <Route path='/table/basic' component={BasicTable} />

@@ -29,7 +29,7 @@ export default function ETable (props) {
         return `共${props.dataSource.length}条`
       }
     })
-  }, [props.dataSource.length])
+  }, [props.dataSource])
   // 多选
   useEffect(() => {
     if (props.getList) {
@@ -131,9 +131,9 @@ export default function ETable (props) {
       row_selection = 'radio';
     }
 
-    let pagi_nation = props.pagination;
+    let pagi_nation = props.dataSource ? props.pagination : null;
 
-    return <Spin spinning={props.dataSource.length === 0 ? true : false}>
+    return <Spin spinning={!props.dataSource ? true : false}>
       <Table
         className="card page-table"
         bordered

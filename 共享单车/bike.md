@@ -552,6 +552,42 @@ span	包含列的数量	number	1
 layout	描述布局	horizontal | vertical	不怎么用垂直
 ```
 
+## 树形结构
+
+```js
+checkable	节点前添加 Checkbox 复选框	boolean	false
+defaultExpandedKeys	默认展开指定的树节点			   string[]	[]
+defaultSelectedKeys	默认选中的树节点				string[]
+defaultCheckedKeys	默认选中复选框的树节点			  string[]
+受控
+expandedKeys	（受控）展开指定的树节点
+autoExpandParent	是否自动展开父节点
+
+checkedKeys	（受控）选中复选框的树节点
+（注意：父子节点有关联，如果传入父节点 key，则子节点自动选中；
+	相应当子节点 key 都传入，父节点也自动选中。
+当设置checkable和checkStrictly，它是一个有checked和halfChecked属性的对象，并且父子节点的选中与否不再关联
+checkStrictly	checkable 状态下节点选择完全受控（父子节点选中状态不再关联）
+selectedKeys	（受控）设置选中的树节点
+```
+
+```js
+回调函数
+
+选中的时候
+onSelect={onSelect}
+
+
+添加完复选框勾选复选框的时候
+onCheck={onCheck}
+
+展开/收起节点时触发
+onExpand
+
+loadData	异步加载数据
+
+```
+
 
 
 # 四/表单(新版)
@@ -1237,13 +1273,19 @@ let handleD = () => {
 
 ```js
 
-
 ```
 
 编辑修改
 
 ```js
-这个模块没有做
+这个模块没有做	给表单传递一个初始值,表单通过this.props拿到,if空->创建\\if有就是编辑功能
+
+let userInfo = this.props.userInfo||{}
+
+initialValue:userInfo.userName
+initialValue:userInfo.sex
+
+直接渲染到页面上面
 ```
 
 查询详情
@@ -1255,7 +1297,7 @@ let handleD = () => {
 删除
 
 ```js
-
+获取id 调用接口 重新渲染就可以了
 ```
 
 
@@ -1263,6 +1305,30 @@ let handleD = () => {
 ```html
 其实应该在每一个的后面加一个删除按钮和更新按钮
 ```
+
+###### ----2020年4月16号-结束
+
+# 十二/核心权限设置
+
+> RBAC，即基于角色的访问控制（Role-Based Access Control），是优秀的权限控制模型，主要通过角色和权限建立管理，再赋予用户不同的角色，来实现权限控制的目标。
+>
+> 利用该模型来配置权限，直接优点是角色的数量比用户的数量更少，先把权限赋予角色，即可完成权限的分配；再为用户分配相应的角色，即可直接获得角色拥有的权限。
+
+
+
+1.角色列表,这个公司一共有多少个角色
+
+2.设置权限,给角色来设置响应的权限值
+
+3.用户授权,把用户分配个那个角色
+
+
+
+
+
+
+
+# 十三/登录
 
 
 
@@ -1518,29 +1584,11 @@ const rowSelection = {
   }
 ```
 
-### 六/表格组件的封装
-
-```js
-在类组件下,单击事件某一行来	修改当前的选中状态,UI不会显示
-
-解决办法
-
-改成函数组件,使用hooks
-```
-
-### 七/
-
-```js
-Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method
-
-还有一个是描述框description的span应该怎么使用
-```
-
 
 
 ###### ----------------2020年4月14号
 
-## 五/表单封装和无限刷新
+### 五/表单封装和无限刷新
 
 ```js
 封装的表单
@@ -1574,6 +1622,100 @@ render之后又会调用this.InitTable()
 封装成方法放到外面
 
 ```
+
+### 六/表格组件的封装
+
+```js
+在类组件下,单击事件某一行来	修改当前的选中状态,UI不会显示
+
+解决办法
+
+改成函数组件,使用hooks
+```
+
+### 七/
+
+```js
+Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method
+
+还有一个是描述框description的span应该怎么使用
+```
+
+### 八/返回接口数据的统一
+
+```js
+调用角色接口的时候,可以返回数据,但是页面一直显示弹窗
+
+原因:axios封装完成之后-->判断返回的code是字符串类型,但是角色接口那边是数值类型
+
+导致进入reject
+
+解决办法
+-->修改接口数据,改成统一的格式
+```
+
+### 九/样式
+
+```js
+Permision里面的Card卡片自动变成了最大高度
+在没有内容填充的情况下也有了一定的高度,并且给card单独设置高度,下面空出来的部分也不会被补上
+
+原因
+
+common.style里面的
+.content {
+  position: relative;
+  padding: 20px;
+  // background-color: $colorL;
+  height: 100vh;
+}
+
+高度设置成了100vh
+
+解决办法,在permission里面重写自己的高度是auto
+
+```
+
+### 十、Key值，注意key的index需要+1操作
+
+```js
+Each child in a list should have a unique "key" prop.
+
+解决办法，在使用封装的基础表格之前，对数据进行处理
+let items = res.result.item_list;
+  items.map((item, index) => {
+    item.key = index + 1;
+    return item
+  })
+  this.setState({
+    item_list: items
+  })
+```
+
+### 十一/表单的initialValue
+
+```js
+Bug现象
+现在要通过给表单组件传递一个初始值，来每次动态改变Select的默认value，和点击的相匹配
+Bug是每次都不会更新字段，一直使用最初始的Value值
+
+Bug出现的原因
+先看两个API
+resetFields	重置一组字段到 initialValues	(fields?: NamePath[]) => void
+initialValues	表单默认值，只有初始化以及重置时生效	object
+这个重置是什么意思--》就是resetFields()方法
+
+步骤--》关闭modal，重置字段到initial.value  -->这个initialValue就是当前的值
+也就是说，只有第一次进入这个表单的时候，才会使用Initialvalue的值
+之后的每次进入表单，initialValue的值都会被更改，但是不会被使用
+
+解决办法
+
+在modal上面使用forceRender，在表单渲染之前使用
+在modal打开之前，调用resetFields()将表单中的值先清除一遍
+```
+
+
 
 
 
@@ -1649,6 +1791,12 @@ sst→	this.setState({ })
 ssf→	this.setState((state, props) => return { })
 
 hoc 高阶组件
+
+
+cs
+const {  } = this.state;
+cp
+const {  } = this.props;
 ```
 
 # 封装
@@ -1761,9 +1909,21 @@ let getItem = (val) => {
 }
 7.增加了spin-loading状态
 
+8.新增判断,---Bug,如果没有数据的话,读取数据的length会直接报错
+    1.如果没有数据那么就显示0条数据
+    2.分页也显示0条数据
+    
+    没有数据的话是不显示分页的-->
+原来
+    let pagi_nation = props.pagination;
+    return <Spin spinning={props.dataSource.length===0 ? true : false}>
+现在
+    let pagi_nation = props.dataSource ? props.pagination : null;
+    return <Spin spinning={!props.dataSource ? true : false}>
+
 ```
 
-## 注意
+## 二次注意
 
 订单的key需要单独做处理
 
@@ -1788,9 +1948,3 @@ arrRes.map((item, index) => {
 ###### ----------------2020年4月14号
 
 
-
-
-
-11-1
-
-16分钟
