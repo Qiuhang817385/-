@@ -50,12 +50,12 @@ export default class PermEditForm extends Component {
   render () {
     // 这里的Bug未修复
     const { treeData } = this.state;
-    console.log('render-treeData:', treeData);
+    // console.log('render-treeData:', treeData);
     // 选中的单行数据
     const { detailInfo } = this.props
-    console.log('detailInfo :', detailInfo);
+    // console.log('detailInfo :', detailInfo);
     // console.table(detailInfo);
-    console.log('detailInfo.status :', detailInfo.status);
+    // console.log('detailInfo.status :', detailInfo.status);
     // detailInfo.role_name/status/authorize_user_name/authorize_time/create_time/menus
     const formItemLayout = {
       labelCol: { span: 5 },

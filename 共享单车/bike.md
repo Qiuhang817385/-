@@ -1434,6 +1434,44 @@ patchMenuInfo={(checkedKeys) => {
   }
 ```
 
+## 用户授权
+
+```js
+// concat的用法和filter的用法		concat和filter都不会改变原数组 
+ /**
+   * 筛选目标用户
+   */
+  getAuthUserList = (data) => {
+    if (data && data.length > 0) {
+      console.log('data :', data);
+      let MockData = [];
+      for (const iterator of data) {
+        MockData.push({
+          key: iterator.user_id,
+          title: iterator.user_name,
+          status: iterator.status
+        })
+      }
+      let target = [];
+      // concat的用法和filter的用法
+      // dataSource = dataSource.concat(MockData.filter((item) => item.status === 1))
+       //右侧是key的集合
+      target = target.concat(MockData.filter((item) => item.status === 1)).map(item => item.key)
+      console.log('target :', target);
+        
+      //左侧是所有数据
+      this.setState({ dataSource: MockData, target })
+    }
+  }
+  
+ 
+  
+  transfer
+  //右侧是key的集合
+   //左侧是所有数据
+
+```
+
 
 
 
@@ -1833,6 +1871,22 @@ initialValues	表单默认值，只有初始化以及重置时生效	object
 render函数里面已经有了数据
 
 但是为什么每次打开页面都获取不到？
+
+
+<Modal
+          forceRender
+          title='设置权限'
+          visible={isUserVisible}
+          onOk={this.handleOKUserSubmit}
+          onCancel={() => { this.setState({ isUserVisible: false }) }}>
+          <RoleAuth
+            AuthName={roleItem && roleItem.role_name}
+            mockData={this.state.dataSource}
+            targetKeys={target}
+          />
+                
+                
+                这里的target也是,读取不到最新的数据??/
 ```
 
 ### 十三/不可读取
@@ -1874,6 +1928,149 @@ render函数里面已经有了数据
                   <Route exact path="/" component={Home}></Route>
                   <Route exact path="/home" component={Home}></Route>
 
+
+```
+
+### 十五	
+
+```js
+ Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+
+我们不能在组件销毁后设置state，防止出现内存泄漏的情况
+
+Bug出现场景
+
+    //组件B
+    class TestContainer extends Component{
+        constructor(){
+            super()
+            this.state = {
+                isShow:true
+            }
+        }
+        render(){
+            return (
+            <div>
+    <button onClick={()=>this.setState({isShow:!this.state.isShow})}>toggle</button>
+                    {!!this.state.isShow&&<Test />}
+            </div>
+            )
+        }
+    }
+    //组件A
+    class Test extends Component{
+        constructor(){
+            super()
+            this.state = {
+                num:0
+            }
+        }
+        getNum=()=>{
+            //模拟异步请求
+            this.timer = setTimeout(()=>{
+                this.setState({ num: Math.random() })
+            },3000)
+        }
+        render(){
+            return (
+    <div onClick={this.getNum} style = {{ width: 100, height: 100, background: 'red' }}>
+        {this.state.num}
+                </div>
+            )
+        }
+    }
+    在本例子中：
+        当我们点击组件A时，会发送一个异步请求，请求成功后会更新num的值。
+        当我们点击组件B时，会控制组件的A的卸载与装载
+        
+当我们点击组件A后，组件A需要3秒的时间才能获取到数据并重新更新num的值，假如我们在这3秒内点击一次组件B，
+表示卸载组件A，但是组件A的数据请求依然还在，当请求成功后，组件A已经不存在，此时就会报这个警告
+
+
+解决办法:应该在组件销毁的时候将异步请求撤销
+
+componentWillUnmount = () => {
+    this.setState = (state,callback)=>{
+      return;
+    };
+}
+
+
+
+本例的解决办法
+getEtableItem是封装的表格组件获取里面值的方法
+
+刚刚初始化的时候就会调用一次,这个时候还没有对单项进行点击,所以访问item.id就会直接报错
+
+所以在使用前先加一个判断
+ /**
+   *  ETable返回来的数据
+   */
+  getEtableItem = (rec) => {
+    this.setState({
+      roleItem: rec,
+    }, () => {
+      console.log('object :', this.state.roleItem);
+      let item = this.state.roleItem;
+      if (item) {
+        console.log('item.id :', item.id);
+          //获取角色下面的用户列表
+      // accessUser(item.id).then((res) => {
+      //   let List = res.result;
+      //   this.getAuthUserList(List);
+      // })
+      }
+      
+    })
+  }
+```
+
+### 十六/子组件拿不到数据/异步渲染组件和父调子方法传值/纯渲染组件
+
+```js
+我的想法是,当父组件异步获取数据之后,给子组件传递值,子组件把值保存到本身的组件状态当中
+然后每次操作的都是本身的组件状态数据,返回去的也是本身的数据
+
+理想的状态是只获取父组件,异步数据的最新副本,然后对副本进行操作
+
+但是由于下面的渲染过程,异步数据根本拿不到
+
+渲染的过程
+
+父组件挂载相应的dom和default state和props-->
+    子组件先使用父组件默认的state--->
+    父组件的state发生变化--->子组件监听不到变化
+
+实验1,不给父组件设置默认的tareget,直接在点击的时候设置
+ <RoleAuth
+            AuthName={roleItem && roleItem.role_name}
+            mockData={this.state.dataSource}
+            targetKeys={target ? target : []}
+          />
+
+结果:失败
+
+实验2,直接在子组件当中使用父组件传递过来的方法
+ <Transfer
+          dataSource={props.mockData}
+		//直接使用
+          targetKeys={props.targetKeys}
+          titles={['Source', 'Target']}
+          // selectedKeys={selectedKeys}
+          onChange={handleChange}
+          render={item => item.title}
+        />
+
+onChange事件也是通过调用父组件的方法来修改这个数据
+//props.patchUserInfo(nextTargetKeys)
+
+<RoleAuth
+    AuthName={roleItem && roleItem.role_name}
+    mockData={this.state.dataSource}
+    targetKeys={target ? target : []}
+    //父组件的方法来修改这个数据
+    patchUserInfo={(res) => this.setState({ target: res })}
+  />
 
 ```
 
