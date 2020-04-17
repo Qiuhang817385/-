@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Form, Select } from 'antd';
 const formItemLayout = {
   labelCol: {
@@ -9,19 +9,20 @@ const formItemLayout = {
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default function OpenCityForm (props) {
-
-  // const { getFieldDecorator } = props.form;
+  let openCityForm = useRef(null);
+  useEffect(() => {
+    props.formRef(openCityForm);
+  })
   return (
     <>
       <Form
         layout="horizontal"
         initialValues={{ city_id: "", op_mode: "1", mode: "" }}
+        ref={openCityForm}
       >
-
         <FormItem label="选择城市" {...formItemLayout}
           name="city_id"
         >
-
           <Select style={{ width: 100 }}>
             <Option value="">全部</Option>
             <Option value="1">北京市</Option>

@@ -9,16 +9,16 @@ export default function Form2 () {
     一种常见的使用方式，是配置国际化提示信息：
     修改模板的配置信息
    */
-  const validateMessages = {
-    required: '请输入${label}!',
-    types: {
-      email: '${label} is not validate email!',
-      number: '${label} is not a validate number!',
-    },
-    number: {
-      range: '${label} must be between ${min} and ${max}',
-    },
-  };
+  // const validateMessages = {
+  //   required: '请输入${label}!',
+  //   types: {
+  //     email: '${label} is not validate email!',
+  //     number: '${label} is not a validate number!',
+  //   },
+  //   number: {
+  //     range: '${label} must be between ${min} and ${max}',
+  //   },
+  // };
   const onFinish = values => {
     console.log(values);
     /* 
@@ -34,7 +34,8 @@ export default function Form2 () {
     <>
       <Card title="嵌套结构与校验信息" className="card-wrap">
         {/* 用户名 */}
-        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+        {/* <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}> */}
+        <Form {...layout} name="nest-messages" onFinish={onFinish} >
           <Form.Item
             name={['user', 'name']}
             label="用户名"

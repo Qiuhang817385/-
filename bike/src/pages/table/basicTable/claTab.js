@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import Utils from './../../../utils/utils';
+// import Utils from './../../../utils/utils';
 import ETable from '../../../components/ETable/EtableFun.js';
 import axios from '../../../axios/axios';
-import { Table, Tag, Card, Spin, Button, Modal, message } from 'antd';
-import { columns, columns2 } from './columns';
+import { Card, } from 'antd';
+import { columns2 } from './columns';
 export default class Cll extends Component {
   constructor(props) {
     super(props);

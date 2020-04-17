@@ -4,7 +4,7 @@ import '../style.scss'
 import { getOption, getOption2, getOption3 } from './fn'
 import ReactEcharts from 'echarts-for-react';
 import echartTheme from '../echartTheme'
-import themeLight from '../themeLight'
+// import themeLight from '../themeLight'
 import echarts from 'echarts/lib/echarts'
 // 引入饼图和折线图
 import 'echarts/lib/chart/pie'

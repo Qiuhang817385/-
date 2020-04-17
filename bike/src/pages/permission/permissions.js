@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Button, Row, Col, Modal, Form, Input, Select, Tree } from 'antd';
+import { Card, Button, Row, Col, Modal, } from 'antd';
 import './permission.scss'
 import ETable from './../../components/ETable/EtableFun1'
 import { columns } from './data'
@@ -47,9 +47,9 @@ export default class Permissions extends Component {
    * 创建角色--OnOk
    */
   handleOKRoleSubmit = () => {
-    let role = this.roleForm.current.formRef.current.getFieldsValue();
+    let role = this.roleForm.current.RoleformRef.current.getFieldsValue();
     Create(role).then((res) => {
-      if (res.code == '0') {
+      if (res.code === '0') {
         Modal.info({
           title: '创建用户',
           content: '创建成功！'
@@ -100,7 +100,7 @@ export default class Permissions extends Component {
     willSendRoleData["Id"] = item.id;
     willSendRoleData["menus"] = item.menus;
     editRole(willSendRoleData).then((res) => {
-      if (res.code == '0') {
+      if (res.code === '0') {
         Modal.info({
           'title': '设置权限',
           'content': '设置成功!'
@@ -200,7 +200,6 @@ export default class Permissions extends Component {
   }
   render () {
     const { item_list, roleItem, target, menuInfo, isUserVisible, isPermissionVisible, isRoleVisible } = this.state;
-    console.log('target :', target);
     return (
       <>
         <Card className='card-wrap' >

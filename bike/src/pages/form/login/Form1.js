@@ -27,7 +27,7 @@ export default function Form1 () {
     });
   };
   // 作用域进行交互,多选
-  const onGenderChange = value => {
+  const onGenderChange = (value) => {
     switch (value) {
       case 'male':
         form.setFieldsValue({
@@ -43,13 +43,15 @@ export default function Form1 () {
         form.setFieldsValue({
           note: 'Hi there!',
         });
+        return;
+      default: return
     }
   };
   const handleonValuesChange = (e) => {
     //console.log(e)//{note: "1"}{gender: "male"}
     //相当于KeyUp事件 或者 onChange 事件
     let a = form.getFieldValue('note')
-    // console.log(a)
+    console.log(a)
   }
   const handleonFieldsChange = (e) => {
     // 触摸事件,使用的机会比较少

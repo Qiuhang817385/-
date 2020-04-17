@@ -1,5 +1,4 @@
 import React from 'react'
-import { Card, Transfer, Switch } from 'antd';
 import './style.scss'
 import Trans1 from './trans1'
 import Trans2 from './trans2'

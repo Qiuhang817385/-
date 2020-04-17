@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import App from './App';
 import Home from './pages/home/Home'
 import Admin from './Admin'
@@ -33,6 +33,7 @@ import Permissions from './pages/permission/permissions'
 import Common from './Common.js'
 import orderDeatil from './pages/order/detailInline'
 import userDeatil from './pages/user/detail'
+import BankForm from './pages/bankForm/BankForm';
 export default function router () {
   return (
     <Router>
@@ -70,6 +71,7 @@ export default function router () {
                   <Route path='/ui/tree' component={Trees} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
+                  <Route path='/bankForm' component={BankForm} />
                   <Route path='/table/basic' component={BasicTable} />
                   <Route path='/table/high' component={HighTable} />
                   <Route path="/city" component={City} />

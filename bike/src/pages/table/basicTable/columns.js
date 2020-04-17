@@ -55,7 +55,7 @@ export const columns2 = [
     title: '性别',
     dataIndex: 'sex',
     render: sexid => (<span>
-      {<span>{sexid == 1 ? '男' : '女'}</span>}
+      {<span>{sexid === 1 ? '男' : '女'}</span>}
     </span>
     )
 

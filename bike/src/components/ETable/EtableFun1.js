@@ -49,7 +49,7 @@ export default function ETable (props) {
   let onRowClick = (record, index) => {
     let rowSelection = props.rowSelection;
     //复选框单击操作
-    if (rowSelection == 'checkbox') {
+    if (rowSelection === 'checkbox') {
       // selectedItem = [];
       // let judgeId = selectedRowKeys.indexOf(record.key);
       // if (judgeId >= 0) {
@@ -67,7 +67,7 @@ export default function ETable (props) {
     {
       let selectKey = [index + 1];
       // 当前选中和当前点击的如果是同一个,那么直接返回,不做取消的状态
-      if (selectedRowKeys && selectedRowKeys[0] == index + 1) {
+      if (selectedRowKeys && selectedRowKeys[0] === index + 1) {
         return;
       }
       setSelectedRowKeys(selectKey)
@@ -79,7 +79,7 @@ export default function ETable (props) {
    */
   let onSelectChange = (selectedRowKeys, selectedRows) => {
     let rowSelection = props.rowSelection;
-    if (rowSelection == 'checkbox') {
+    if (rowSelection === 'checkbox') {
       console.log('selectedRowKeys :', selectedRowKeys);
       console.log('selectedRows :', selectedRows);
       if (!selectedRows[0]) {
@@ -124,7 +124,7 @@ export default function ETable (props) {
     let row_selection = props.rowSelection;
     if (row_selection === false || row_selection === null) {
       row_selection = false;
-    } else if (row_selection == 'checkbox') {
+    } else if (row_selection === 'checkbox') {
       //设置类型未复选框
       rowSelection.type = 'checkbox';
     } else {

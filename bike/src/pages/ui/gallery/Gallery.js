@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Row, Col, Modal } from 'antd';
+import { Card, Row, Col } from 'antd';
 export default class gallery extends Component {
   render () {
     const imgs = [

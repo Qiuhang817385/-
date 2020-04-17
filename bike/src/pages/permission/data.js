@@ -16,7 +16,7 @@ export const columns = [
     title: '使用状态',
     dataIndex: 'status',
     render (status) {
-      if (status == 1) {
+      if (status === 1) {
         return <Badge status="success" text="启用" />
       } else {
         return <Badge status="error" text="停用" />

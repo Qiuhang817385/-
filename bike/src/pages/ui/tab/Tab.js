@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './style.scss'
-import { Card, Tabs, message, Icon } from 'antd'
+import { Card, Tabs, message } from 'antd'
 import { PlusCircleTwoTone, LeftCircleTwoTone, RightCircleTwoTone } from '@ant-design/icons';
 const { TabPane } = Tabs;
 export default class Tab extends Component {

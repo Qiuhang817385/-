@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Button, notification } from 'antd';
-import { SmileOutlined, PlusCircleTwoTone, LeftCircleTwoTone, RightCircleTwoTone, DownCircleTwoTone } from '@ant-design/icons';
+import { SmileOutlined, PlusCircleTwoTone, LeftCircleTwoTone, RightCircleTwoTone } from '@ant-design/icons';
 import './style.scss'
 export default class Notifications extends Component {
   openNotification = (type) => {

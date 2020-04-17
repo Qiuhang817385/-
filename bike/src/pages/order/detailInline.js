@@ -25,11 +25,11 @@ function Detail (props) {
       }
     }).then((res) => {
       console.log('res :', res);
-      if (res.code == '0') {
+      if (res.code === '0') {
         setResult(res.result)
       }
     })
-  }, [])
+  }, [orderId])
   let startTime = () => {
     let a = new Date().setTime(result.start_time);
     return <>{moment(a).format('YY年MM月DD日 /  HH点mm分ss')}</>
@@ -61,7 +61,7 @@ function Detail (props) {
             {result.total_time}
           </Item>
           <Item label='状态' span={2}>
-            {result.status == 1 ? <Badge status="processing" text="进行中" /> : <Badge status="success" text="完成" />}
+            {result.status === 1 ? <Badge status="processing" text="进行中" /> : <Badge status="success" text="完成" />}
           </Item>
           <Item label='开始时间' span={2}>
             {

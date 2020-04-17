@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Tree } from 'antd'
 import './style.scss'
-const { TreeNode } = Tree;
+// const { TreeNode } = Tree;
 
 const initTreeDate = [
   {

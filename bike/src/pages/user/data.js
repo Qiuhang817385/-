@@ -8,7 +8,7 @@ export const columns = [{
   title: '性别',
   dataIndex: 'sex',
   render (sex) {
-    return sex == 1 ? '男' : '女'
+    return sex === 1 ? '男' : '女'
   }
 }, {
   title: '状态',
@@ -191,27 +191,42 @@ export const del = {
  * 修改
  */
 export const update = {
+  formLayout: 'horizontal',
+  layout: {
+    labelCol: {
+      span: 6,
+    },
+    wrapperCol: {
+      span: 15,
+    },
+  },
   initValue: {
   },
   formList: [
     {
       name: 'username',
       type: 'input',
-      label: '用户名',
-      placeholder: '请输入用户名',
+      label: '姓名',
       width: 100
     },
     {
-      name: 'pwd',
-      type: 'password',
-      label: '密码',
-      placeholder: '请输入密码',
-      width: 100
+      name: 'sex',
+      type: 'radiogroup',
+      label: '性别',
+      options: [
+        { label: '男', value: 1 },
+        { label: '女', value: 2 },
+      ]
     },
     {
       type: 'datepicker',
-      label: '入职时间',
+      label: '生日',
       name: 'date-picker'
-    }
+    },
+    {
+      type: 'input',
+      label: '联系地址',
+      name: 'address',
+    },
   ]
 }

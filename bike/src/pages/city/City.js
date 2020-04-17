@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Card, Button, Modal, Pagination, Form, Select, Col, Row } from 'antd';
+import { Table, Card, Button, Modal, Col } from 'antd';
 import axios from './../../axios/axios';
-import utils from './../../utils/utils';
+// import utils from './../../utils/utils';
 import OpenCityForm from './OpenCityForm'
 import FilterForm from './FilterForm';
 import { params, columns } from './data'
@@ -10,10 +10,12 @@ import { params, columns } from './data'
 import './City.scss'
 
 const City = () => {
+  let formObj = null;
   const [list, setList] = useState([]);
   const [isShowOpenCity, setIsShowOpenCity] = useState(false);
   const [pagination, setpagination] = useState(null)
   const [resF, setRes] = useState(null);
+  console.log('object :', resF);
   useEffect(() => {
     requestList().then((res) => {
       console.log('res.result.page :', res);
@@ -39,34 +41,43 @@ const City = () => {
     });
   }, [])
 
-  async function pageGet () {
-    // let pageObj = utils.pagination(res,                  //参数1,设置基础数据
-    //   (current) => {        //参数2,回调函数,也是分页组件里面的onchange事件,当切换页面的时候调用的函数
-    //     params.page = current;   //设置参数页,用于下面再进行请求指定页面的数据
-    //     requestList().then((res) => {
-    //       // console.log('respage :', res);
-    //       let newPage = utils.pagination(res);
-    //       console.log('newPage :', newPage);
-    //       setpagination(newPage)
-    //     });
-    //   })
-    // console.log('pageObj', pageObj)
-    // setpagination(pageObj)
-
-  }
-
+  // async function pageGet () {
+  // let pageObj = utils.pagination(res,                  //参数1,设置基础数据
+  //   (current) => {        //参数2,回调函数,也是分页组件里面的onchange事件,当切换页面的时候调用的函数
+  //     params.page = current;   //设置参数页,用于下面再进行请求指定页面的数据
+  //     requestList().then((res) => {
+  //       // console.log('respage :', res);
+  //       let newPage = utils.pagination(res);
+  //       console.log('newPage :', newPage);
+  //       setpagination(newPage)
+  //     });
+  //   })
+  // console.log('pageObj', pageObj)
+  // setpagination(pageObj)
+  // }
+  /**
+   * 开通城市-OnOk
+   */
   let handleSubmit = () => {
+    let data = formObj.current.getFieldsValue();
+    console.log('data :', data);
     axios.ajax({
       url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/city/open',
       data: {
-        // params: cityInfo
+        ...data
       }
     }).then((res) => {
       console.log('res :', res);
+      Modal.info({
+        title: '开通城市',
+        content: '开通成功'
+      })
     })
     setIsShowOpenCity(false)
   }
-  // 开通城市操作
+  /**
+   * 开通城市操作-Open
+   */
   let handleOpenCity = () => {
     setIsShowOpenCity(true)
   }
@@ -100,10 +111,13 @@ const City = () => {
           setIsShowOpenCity(false)
         }}
         onOk={handleSubmit}
-      ></Modal>
-      <Card className="card-wrapper" style={{ marginTop: 10 }}>
-        <OpenCityForm></OpenCityForm>
-      </Card>
+      >
+        <OpenCityForm
+          formRef={(form) => {
+            formObj = form
+          }}
+        ></OpenCityForm>
+      </Modal>
     </>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Form, Input, Select } from 'antd';
+import { Card, Form, Input, } from 'antd';
 // import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // import { layout, tailLayout } from './sty';
 // const { Option } = Select;

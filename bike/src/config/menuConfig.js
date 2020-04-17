@@ -124,8 +124,8 @@ const menuList = [
     key: '/user'
   },
   {
-    title: '车辆地图',
-    key: '/bikeMap'
+    title: '银行表单',
+    key: '/bankForm'
   },
   {
     title: '图标',

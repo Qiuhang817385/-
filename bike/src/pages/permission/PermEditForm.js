@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Select, Input, Tree } from 'antd'
 import menuList from './../../config/menuConfig';
-import menuList2 from './../../config/menuConfig2';
+// import menuList2 from './../../config/menuConfig2';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default class PermEditForm extends Component {
@@ -49,7 +49,7 @@ export default class PermEditForm extends Component {
   }
   render () {
     // 这里的Bug未修复
-    const { treeData } = this.state;
+    // const { treeData } = this.state;
     // console.log('render-treeData:', treeData);
     // 选中的单行数据
     const { detailInfo } = this.props

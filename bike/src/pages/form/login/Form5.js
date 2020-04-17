@@ -102,7 +102,7 @@ const useResetFormOnCloseModal = ({ form, visible }) => {
     if (!visible && prevVisible) {
       form.resetFields();
     }
-  }, [visible]);
+  }, [prevVisible, form, visible]);
 };
 
 const ModalForm = ({ visible, onCancel }) => {

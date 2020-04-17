@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 
 export const columns = [
@@ -20,7 +20,7 @@ export const columns = [
     width: 80,
     dataIndex: 'sex',
     render (sex) {
-      return sex == 1 ? '男' : '女'
+      return sex === 1 ? '男' : '女'
     }
   },
   {
@@ -99,7 +99,7 @@ export const columns2 = [
     width: 80,
     dataIndex: 'sex',
     render (sex) {
-      return sex == 1 ? '男' : '女'
+      return sex === 1 ? '男' : '女'
     }
   },
   {
@@ -256,7 +256,7 @@ export const columns3 = [
     key: 'sex',
     dataIndex: 'sex',
     render (sex) {
-      return sex == 1 ? '男' : '女'
+      return sex === 1 ? '男' : '女'
     }
   },
   {

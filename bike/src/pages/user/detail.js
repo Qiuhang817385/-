@@ -12,7 +12,7 @@ import moment from 'moment';
 import { useParams, useHistory } from 'react-router-dom'
 const Item = Descriptions.Item;
 function Detail (props) {
-  const [result, setResult] = useState([])
+  const [result, setResult] = useState()
   let { userId } = useParams();
   let history = useHistory();
   useEffect(() => {
@@ -24,13 +24,17 @@ function Detail (props) {
         }
       }
     }).then((res) => {
-      if (res.code == '0') {
+      console.log('object :', res.result.list);
+      if (res.code === '0') {
         // setResult(res.result)
         // 是在模态框
-        console.log('res', res)
+        // 获取了不能？？？
+        let obj = res.result.list.find(item => +item.id === +userId)
+        console.log('obj', obj)
+        setResult(obj)
       }
     })
-  }, [])
+  }, [userId])
   let startTime = () => {
     let a = new Date().setTime(result.start_time);
     return <>{moment(a).format('YY年MM月DD日 /  HH点mm分ss')}</>
@@ -41,44 +45,46 @@ function Detail (props) {
   }
   return (
     <div className="contentOrder">
-      <Card title="" className='card'>
-        <Button type="primary" onClick={() => { history.goBack() }}>返回</Button>
-      </Card>
-      <Card title="用户详情">
-        <Descriptions title='' bordered>
-          <Item label='用户名' span={12}>
-            {result.user_name}
-          </Item>
-          <Item label='性别' span={2}>
-            {result.mobile}
-          </Item>
-          <Item label='行驶时长' span={2}>
-            {result.total_time}
-          </Item>
-          <Item label='性别' span={2}>
-            {result.status == 1 ? <Badge status="processing" text="男" /> : <Badge status="success" text="女" />}
-          </Item>
-          <Item label='状态' span={2}>
-            {result.status == 1 ? <Badge status="processing" text="男" /> : <Badge status="success" text="女" />}
-          </Item>
-          <Item label='开始时间' span={2}>
-            {
-              result.start_time ? startTime() : ''
-            }
-          </Item>
-          <Item label='结束时间' span={2}>
-            {result.start_time ? endTime() : ''}
-          </Item>
-          <Item label='订单金额' span={2}>
-            {1000}
-          </Item>
-          <Item label='实付金额' span={2}>
-            {300}
-          </Item>
-        </Descriptions>
-      </Card>
+      {result ? <>
+        <Card title="" className='card'>
+          <Button type="primary" onClick={() => { history.goBack() }}>返回</Button>
+        </Card>
+        <Card title="用户详情">
+          <Descriptions title='' bordered>
+            <Item label='用户名' span={12}>
+              {result.username}
+            </Item>
+            <Item label='性别' span={2}>
+              {result.sex === 1 ? <Badge status="processing" text="男" /> : <Badge status="success" text="女" />}
+            </Item>
+            <Item label='地址' span={2}>
+              {result.address}
+            </Item>
+            <Item label='生日' span={2}>
+              {result.total_time}
+            </Item>
+            <Item label='状态' span={2}>
+              {result.status === 1 ? <Badge status="processing" text="男" /> : <Badge status="success" text="女" />}
+            </Item>
+            <Item label='开始时间' span={2}>
+              {
+                result.start_time ? startTime() : ''
+              }
+            </Item>
+            <Item label='结束时间' span={2}>
+              {result.start_time ? endTime() : ''}
+            </Item>
+            <Item label='订单金额' span={2}>
+              {1000}
+            </Item>
+            <Item label='实付金额' span={2}>
+              {300}
+            </Item>
+          </Descriptions>
+        </Card></> : (<></>)}
     </div>
   )
 }
-
 export default Detail
+// 这个详情页面其实应该是父组件传递过来的值，但是这个由于是路由组件的跳转，所以只能进入页面之后再调用一次API接口进行用户查询
+// 但是由于进入这个页面之后又调用了一次API接口，由于是mock的，所以每次进来之后都不一样

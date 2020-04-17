@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Card, Col, Row, Transfer } from 'antd';
 export default function RoleAuth (props) {
-  const [role_name, setRole_name] = useState('')
-  const [targetKeys, setTargetKeys] = useState([]);
 
   let handleChange = (nextTargetKeys, direction, moveKeys) => {
     // this.setState({ targetKeys: nextTargetKeys });

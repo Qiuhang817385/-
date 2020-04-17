@@ -1,12 +1,13 @@
+// 表格每一个都可以调用render方法获取当前的text和Item，这样的话删除或者编辑就方便太多了
 import React, { useState, useEffect } from 'react'
-import { Table, Tag, Card, Spin, Badge, Button, Modal, message } from 'antd';
-import { columns, columns2, columns3, columns4, handleDelete } from './columns';
-import { } from './data'
+import { Table, Card, Badge, Button, Modal, message } from 'antd';
+import { columns, columns2, columns3, } from './columns';
+// import { } from './data'
 import axios from '../../../axios/axios'
 import './style.scss'
-let params = {
-  page: 1
-}
+// let params = {
+//   page: 1
+// }
 export default function HighTable () {
   const [dataSource, setDataSource] = useState([]);
 
@@ -16,7 +17,7 @@ export default function HighTable () {
   useEffect(() => {
     getData().then((res) => {
       // console.log('res.list :', res.list);
-      res.list.map((item, index) => {
+      res.list.forEach((item, index) => {
         item['key'] = index;
       })
       setDataSource([...res.list])
@@ -29,6 +30,7 @@ export default function HighTable () {
    * @param {排序} sorter 
    */
   const [sortOrder, setSortOrder] = useState("");
+  console.log('sortOrder :', sortOrder);
   let handleChange = (pagination, filters, sorter) => {
     setSortOrder(sorter.order)
   }
@@ -46,7 +48,7 @@ export default function HighTable () {
       title: '性别',
       dataIndex: 'sex',
       render (sex) {
-        return sex == 1 ? '男' : '女'
+        return sex === 1 ? '男' : '女'
       }
     },
     {
@@ -87,7 +89,10 @@ export default function HighTable () {
     },
     {
       title: '地址',
-      dataIndex: 'address'
+      dataIndex: 'address',
+      render: (text, item) => {
+        console.log('item :', item);
+      }
     },
     {
       title: '操作',
@@ -99,6 +104,7 @@ export default function HighTable () {
     }
   ]
   let handleDelete = (item) => {
+    console.log('item :', item);
     let id = item.id;
     Modal.confirm({
       title: '确认',
@@ -112,6 +118,9 @@ export default function HighTable () {
 
   return (
     <>
+      {/* <Spin spinning={listData.length === 0 ? true : false}>
+    <Table onRow={(record, index) => { return { onClick: () => { handleClick(record, index) } } }} columns={columns2} rowSelection={{ ...rowSelection }} pagination={false} dataSource={listData} />
+  </Spin> */}
       <Card className='card-wrap' title="头部固定" >
         <Table
           bordered
@@ -162,6 +171,4 @@ async function getData () {
 }
 
 
-{/* <Spin spinning={listData.length === 0 ? true : false}>
-    <Table onRow={(record, index) => { return { onClick: () => { handleClick(record, index) } } }} columns={columns2} rowSelection={{ ...rowSelection }} pagination={false} dataSource={listData} />
-  </Spin> */}
+

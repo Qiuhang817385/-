@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Table, Form, Select, Modal, message, DatePicker } from 'antd';
+import { Card, Button, Modal, message, } from 'antd';
 import axios from '../../axios/axios';
 import BaseForm from './../../components/BaseForm/BaseForm';
 import ETable from './../../components/ETable/EtableFun1'
-import { columns, formList, params, formItemLayout, rowSelection } from './data'
+import { columns, formList, params, } from './data'
 import './order.scss'
 import { useHistory } from 'react-router-dom'
 
@@ -13,11 +13,11 @@ export default function Order () {
   const [pagination, setpagination] = useState(null);
   const [item, setItem] = useState();
   let history = useHistory();
-
+  console.log('pagination', pagination)
   useEffect(() => {
     requestList().then((res) => {
       let arrRes = res.result.item_list;
-      arrRes.map((item, index) => {
+      arrRes.forEach((item, index) => {
         // 这里的id需要单独做处理,而不是自己的Bug
         item['key'] = index + 1;
       })
@@ -41,6 +41,29 @@ export default function Order () {
     history.push(`/common/order/detail/${item.id}`)
   }
   let handleConfirm = () => {
+    if (!item) {
+      Modal.info({
+        title: '信息',
+        content: '请选择一条订单进行结束'
+      })
+      return;
+    }
+    Modal.info({
+      title: '结束订单',
+      content: `是否要结束订单{${item.order_sn}},用户名(${item.user_name})`,
+      okText: '确定',
+      onOk: () => {
+        //调取接口
+        // 调取删除订单的接口
+        // 结束成功
+        message["success"]({
+          content: '结束成功',
+        })
+        // 刷新页面
+        // 调取刷新页面数据的接口
+      }
+    })
+    console.log('item :', item);
   }
   /**
    * 父级基础组件的方法

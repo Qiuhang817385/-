@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Tag, Card, Spin, Button, Modal, message } from 'antd';
+import { Table, Card, Spin, Button, Modal, message } from 'antd';
 import { columns, columns2 } from './columns';
 import ClaTab from './claTab'
 import { data } from './data'
@@ -12,6 +12,7 @@ export default function BasicTable () {
    */
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectItem, setselectItem] = useState(null);
+  console.log('selectItem :', selectItem);
   const rowSelection = {
     type: 'radio',
     selectedRowKeys,
@@ -90,7 +91,7 @@ export default function BasicTable () {
   let handleDelete = (() => {
     console.log('selectItem22 :', selectItem22);
     let ids = []
-    selectItem22.map((item) => {
+    selectItem22.forEach((item) => {
       ids.push(item.id);
     })
     Modal.confirm({
@@ -113,7 +114,7 @@ export default function BasicTable () {
       </Card>
       <Card className='card-wrap' title="动态表格+Loading状态" >
         <Spin spinning={listData.length === 0 ? true : false}>
-          <Table pagination columns={columns2} pagination={true} dataSource={listData} />
+          <Table columns={columns2} pagination={true} dataSource={listData} />
         </Spin>
       </Card>
       <Card className='card-wrap' title="单选表格" >

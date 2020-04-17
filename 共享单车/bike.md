@@ -1486,6 +1486,102 @@ patchMenuInfo={(checkedKeys) => {
 
 ###### -------------2020年4月13号-结束
 
+# 十四/用户更新
+
+```js
+1.父组件-》函数组件
+子组件-》函数组件
+
+怎么拿到子组件当中的antd表单值
+
+ref={updateForm}
+//获取表单当中的数据，其实没有下面那个好使
+props.filterSubmit(updateForm.current.getFieldsValue())
+
+props.reset(updateForm);
+
+父组件
+let updateForm = null;
+
+这样就可以在任何地方，使用子组件当中的这个form对象
+
+<UpdateForm
+          filterSubmit={(res) => {
+            console.log('res', res)
+          }}
+          data={update}
+          reset={(formObj) => {
+            console.log('formObjc', formObj)
+            updateForm = formObj
+          }}
+        ></UpdateForm>
+
+--------------------------------------
+2.编辑功能，打开子组件表单的时候，根据不同的用户设置不同的初始值
+
+update.initValue = {
+      'username': Item.username,
+      'sex': Item.sex,
+      // 'date-picker': Item.birthday,
+      'address': Item.address,
+    }
+    // updateForm && updateForm.current.resetFields()
+    if (updateForm) {
+      updateForm.current.setFieldsValue({
+        ...update.initValue
+      })
+    }
+
+
+提交功能，修改完毕之后
+let updataOnOk = () => {
+    setItem((prev) => {
+      let target = {};
+        //联合上方一起看
+        //修改完毕之后，获取当前表单的值和item，修改当中Item-->render后会修改表单的初始值，
+      Object.assign(target, prev, updateForm.current.getFieldsValue())
+      return target
+    })
+    // console.log('list :', list);
+    let ids, obj, target = {};
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].id == Item.id) {
+        let old = list[i];
+          //对当前的表格数据进行修改
+          //找出需要修改的哪一项
+        Object.assign(target, old, updateForm.current.getFieldsValue())
+        ids = i;
+        console.log(ids)
+        break;
+      }
+    }
+    if (ids > -1) {
+      console.log('执行了')
+      console.log('ids :', ids);
+      console.log('obj :', target);
+      let newList = list;
+      newList[ids] = target;
+      setList([...list])
+    }
+    set
+```
+
+# 十五/用户模块
+
+```js
+// 表格每一个都可以调用render方法获取当前的text和Item，这样的话删除或者编辑就方便太多了
+
+详情见高级表格的最后一个操作按钮的例子
+ {
+      title: '操作',
+      render: (text, item) => {
+        return <Button size="small"
+          onClick={() => { handleDelete(item) }}
+        >删除</Button>
+      }
+    }
+```
+
 
 
 # 项目工程化
@@ -2074,6 +2170,53 @@ onChange事件也是通过调用父组件的方法来修改这个数据
 
 ```
 
+### 十七/父调子值
+
+```js
+父组件想拿到子组件当中的表单的值
+方式一、子组件是类组件，通过ref
+方式二、子组件是函数组件，通过子组件调用父组件的方法
+
+但是，如果要把每一个用户渲染到表单当中，由于每次需要初始化表单，还需要调用子组件的方法？？
+
+不一定，每次的initial-value都是通过props渲染的
+
+```
+
+### 十八/当异步获取最新的元素，但是页面没有得到怎么办
+
+```js
+useEffect(() => {
+    axios.axiosGet({
+      url: '/table/list',
+      data: {
+        params: {
+          userId: userId
+        }
+      }
+    }).then((res) => {
+      if (res.code == '0') {
+        // setResult(res.result)
+        // 是在模态框
+        // 获取了不能？？？
+        let obj = res.result.list.find(item => item.id == userId)
+        console.log('obj', obj)
+        setResult(obj)
+      }
+    })
+  }, [])
+
+对result进行判断就可以了
+
+{result ? <>
+        <Card title="" className='card'>
+          <Button type="primary" onClick={() => { history.goBack() }}>返回</Button>
+        </Card>
+        <Card title="用户详情">
+         
+        </Card></> : (<></>)}
+```
+
 
 
 
@@ -2188,6 +2331,18 @@ return {
 return {
     '1':fun(parm)
 }[state](parm)
+
+3.合并对象的方法
+
+Object.assign(target, old, updateForm.current.getFieldsValue())
+
+4.过滤/合并/查找
+find() 方法返回通过测试（函数内判断）的数组的第一个元素的值。
+find() 并没有改变数组的原始值。
+
+concat的用法和filter的用法		concat和filter都不会改变原数组
+ 
+target = target.concat(MockData.filter((item) => item.status === 1)).map(item => item.key)
 ```
 
 # 新学快捷键

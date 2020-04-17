@@ -31,7 +31,7 @@ export default class Axios {
   // }).then
   static ajax (options) {
     // 使用loading
-    let loading;
+    // let loading;
     //如果有的接口不希望loading,做判断
     // if (options.data && options.data.isShowLoading !== false) {
     //   loading = document.getElementById('ajaxLoading');
@@ -92,9 +92,10 @@ export default class Axios {
         timeout: 5000,
         params: (options.data && options.data.params) || '',
       }).then((response) => {
-        if (response.status = "200") {
+        if (response.status === 200) {
+          console.log('response :', response);
           let res = response.data;
-          if (res.code == '0') {
+          if (res.code === '0') {
             resolve(res)
           } else {
             // 简单的错误拦截

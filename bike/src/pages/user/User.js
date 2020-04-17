@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, Button, Table, Form, Select, Radio, Icon, message, Modal, Col, Row } from 'antd'
+import { Card, Button, Modal, Col, Row } from 'antd'
 import axios from '../../axios/axios'
 import BaseForm from './../../components/BaseForm/BaseForm'
 import EtableFun from '../../components/ETable/EtableFun1';
 import './user.scss'
 import { columns, formList, create, read, update, del } from './data'
 import { useHistory } from 'react-router-dom'
-
+import UpdateForm from './updateForm'
 // card-wrapper
-const FormItem = Form.Item;
-const Option = Select.Option;
-const RadioGroup = Radio.Group;
 const params = {
   page: 1
 }
@@ -19,7 +16,10 @@ export default function User () {
   const [Item, setItem] = useState(null);
   // Model对象
   const [visible, setVisible] = useState(false);
+  const [upvisible, setUpVisible] = useState(false);
   const [title, setTitle] = useState('')
+
+  let updateForm = null;
 
   const [type, setType] = useState('create')
   let obj = {
@@ -32,7 +32,7 @@ export default function User () {
     requestList().then((res) => {
       console.log('res :', res);
       let arrRes = res.result.list;
-      arrRes.map((item) => {
+      arrRes.forEach((item) => {
         item['key'] = item.id;
       })
       setList([...arrRes])
@@ -44,13 +44,25 @@ export default function User () {
     console.log('params', params)
     // 把params传递给本地的params,已经有一个分页了, 然后请求数据
   }
-  // 创建增加
+  /**
+   * 创建增加
+   */
   let handleC = () => {
-    setVisible(true);
     setType('create')
+    setVisible(true);
     setTitle('创建');
   }
-  // 查询
+  let onCreate = values => {
+    console.log('create')
+    Modal.info({
+      title: '创建员工',
+      content: '创建成功！'
+    })
+    setVisible(false);
+  };
+  /**
+   * 查询
+   */
   let handleR = () => {
     // setVisible(true);
     // setType('read')
@@ -64,13 +76,78 @@ export default function User () {
     }
     history.push(`/common/user/detail/${Item.id}`)
   }
-  // 更新编辑
+  //一样不会被调用，没有打开模态框
+  let onRead = values => {
+    console.log('read')
+    setVisible(false);
+  };
+  /**
+   * 更新编辑
+   */
   let handleU = () => {
-    setVisible(true);
-    setType('update')
-    setTitle('编辑');
+    // console.log('baseForm', baseForm)
+    // baseForm.current.formRef.current.resetFields()
+    /* 
+      //由于form是在modal当中，所以需要给modal加上forcerender来强制渲染，否则拿不到,但是加了强制渲染，表单没有初始值了
+    // 只能等表单打开才能拿到数据
+    // console.log('baseForm', baseForm)
+    // baseForm.current.formRef.current.resetFields()
+     */
+    if (!Item) {
+      Modal.info({
+        title: '编辑',
+        content: '请先选择一位用户'
+      })
+      return;
+    }
+    update.initValue = {
+      'username': Item.username,
+      'sex': Item.sex,
+      // 'date-picker': Item.birthday,
+      'address': Item.address,
+    }
+    // updateForm && updateForm.current.resetFields()
+    if (updateForm) {
+      updateForm.current.setFieldsValue({
+        ...update.initValue
+      })
+    }
+    setUpVisible(true);
   }
-  // 删除
+  let onUpdate = () => {
+
+  }
+
+  let updataOnOk = () => {
+    setItem((prev) => {
+      let target = {};
+      Object.assign(target, prev, updateForm.current.getFieldsValue())
+      return target
+    })
+    // console.log('list :', list);
+    let ids, target = {};
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].id === Item.id) {
+        let old = list[i];
+        Object.assign(target, old, updateForm.current.getFieldsValue())
+        ids = i;
+        console.log(ids)
+        break;
+      }
+    }
+    if (ids > -1) {
+      console.log('执行了')
+      console.log('ids :', ids);
+      console.log('obj :', target);
+      let newList = list;
+      newList[ids] = target;
+      setList([...list])
+    }
+    setUpVisible(false)
+  }
+  /**
+   * 删除
+   */
   let handleD = () => {
     if (!Item) {
       Modal.info({
@@ -82,14 +159,51 @@ export default function User () {
     // history.push(`/common/user/detail/${Item.id}`)
     Modal.info({
       title: '删除',
-      content: '是否删除?'
+      content: `是否删除用户：${Item.username}?`,
+      okText: '确认',
+      onOk: () => {
+        Modal.info({
+          title: '删除',
+          content: `删除成功`,
+          onOk: () => {
+            //重新调取接口数据
+            requestList().then((res) => {
+              console.log('res :', res);
+              let arrRes = res.result.list;
+              arrRes.forEach((item) => {
+                item['key'] = item.id;
+              })
+              setList([...arrRes])
+            })
+          }
+        })
+      }
     })
-  }
-  let onCreate = values => {
-    console.log('Received values of form: ', values);
-    // setVisible(false);
-  };
 
+  }
+  // 这个不会调用，不在表单当中
+  let onDel = values => {
+    console.log('del')
+    setVisible(false);
+  };
+  /**
+   * Modal-利用表逻辑来对一个Modal做4份不同的业务任务处理
+   * @param {Modal-OK类型} type 
+   * @param {获取的表单数据} data 
+   */
+  let CRUD = (type, data) => {
+    console.log('type :', type);
+    let crud = {
+      create: onCreate,
+      read: onRead,
+      update: onUpdate,
+      del: onDel
+    }
+    return crud[type](data);
+  }
+
+
+  // .resetFields()
   return (
     <>
       <Card title="员工管理" className="card-wrapper">
@@ -131,7 +245,7 @@ export default function User () {
           //怎么获取到最新的数据???????
           //函数组件怎么使用到类组件最新的数据--->直接使用ref,太强了
           let res = baseForm.current.formRef.current.getFieldsValue();
-          onCreate(res)
+          CRUD(type, res)
         }}
       >
         <BaseForm
@@ -143,6 +257,35 @@ export default function User () {
           filterSubmit={onCreate}
         ></BaseForm>
       </Modal>
+
+      {/* 更新员工，单独的一个模块 */}
+      <Modal
+        forceRender
+        visible={upvisible}
+        title={'编辑'}
+        okText='确定'
+        cancelText='返回'
+        onCancel={() => setUpVisible(false)}
+        onOk={() => {
+          // 这个对象居然是一个部署了iterator接口的对象
+          console.log('updateForm.current.getFieldsValue()', updateForm.current.getFieldsValue())
+          updataOnOk()
+        }}
+      >
+        <UpdateForm
+          filterSubmit={(res) => {
+            console.log('res', res)
+            // setItem(res)
+          }}
+          data={update}
+          reset={(formObj) => {
+            console.log('formObjc', formObj)
+            updateForm = formObj
+          }}
+        ></UpdateForm>
+        {/* filterSubmit */}
+      </Modal>
+
     </>
   )
 }
@@ -158,3 +301,4 @@ const requestList = () => {
     return res
   })
 }
+

@@ -22,10 +22,10 @@ export default function Paginations () {
   // 修改上一步和下一步
   function itemRender (current, type, originalElement) {
     if (type === 'prev') {
-      return <a>Previous</a>;
+      return <>Previous</>;
     }
     if (type === 'next') {
-      return <a>Next</a>;
+      return <>Next</>;
     }
     return originalElement;
   }

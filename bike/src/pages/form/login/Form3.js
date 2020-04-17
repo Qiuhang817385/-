@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Form, Input, Button, Tooltip, InputNumber, Select, message, Icon, Checkbox } from 'antd';
+import { Card, Form, Input, Button, Tooltip, Select } from 'antd';
 // import { UserOutlined, LockOutlined } from '@ant-design/icons';
 // import { layout, tailLayout } from './sty';
 const { Option } = Select;

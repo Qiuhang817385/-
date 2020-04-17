@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Input, Select, Form, Button, Checkbox, Radio, DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
-import moment from 'moment';
+// import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
@@ -121,7 +121,7 @@ let getOptionList = (data) => {
     return [];
   }
   let options = [] //[<Option value="0" key="all_key">全部</Option>];
-  data.map((item) => {
+  data.forEach((item) => {
     options.push(<Option value={item.id} key={item.id}>{item.name}</Option>)
   })
   return options;

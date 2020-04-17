@@ -3,15 +3,9 @@ import { Button, Form, Select } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 export default function FilterForm () {
-  const formItemLayout = {
-    labelCol: {
-      span: 5
-    },
-    wrapperCol: { span: 19 }
-  }
   return (
     <>
-      <Form layout="inline">
+      <Form layout="inline" >
         <FormItem label="城市" name="city_id">
           <Select
             style={{ width: 100 }}
