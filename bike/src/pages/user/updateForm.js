@@ -51,10 +51,10 @@ export default function UpdateForm (props) {
   //   props.filterSubmit(values)
   // }
   let layout = {
-    labelCol: {
+    labelcol: {
       span: 6,
     },
-    wrapperCol: {
+    wrappercol: {
       span: 15,
     },
   }
