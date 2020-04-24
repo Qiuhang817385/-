@@ -1,0 +1,27 @@
+.logo {
+  line-height: 90px;
+  padding-left: 20px;
+  border-bottom: 1px solid rgb(241, 216, 216);
+  // background-color: #002140;
+
+  img {
+    height: 35px;
+  }
+
+  h1 {
+    // color: #fff;
+    font-size: 20px;
+    margin: 0 0 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+
+.ant-menu-vertical .ant-menu-item,
+.ant-menu-vertical .ant-menu-submenu-title {
+  font-weight: 600;
+  font-size: 17px;
+  text-align: left;
+  padding-left: 40px;
+}

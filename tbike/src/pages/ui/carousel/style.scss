@@ -1,0 +1,36 @@
+.ant-carousel .slick-slide {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
+
+.slider-wrap .ant-carousel .slick-slide {
+  height: 440px !important;
+}
+
+.card-wrap {
+  width: 100%;
+  margin-bottom: 30px;
+
+  span {
+    margin-right: 10px;
+  }
+
+
+  img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
