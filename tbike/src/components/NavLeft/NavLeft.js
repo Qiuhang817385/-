@@ -21,10 +21,10 @@ class NavLeft extends Component {
   componentDidMount () {
     this.props.getMenuList()
     console.log(this.props)
-    const menuTreeNode = this.renderMenu(this.props.MenuConfig);
-    this.setState({
-      menuTreeNode
-    })
+    // const menuTreeNode = this.renderMenu(this.props.MenuConfig);
+    // this.setState({
+    //   menuTreeNode
+    // })
   }
   renderMenu = (data) => {
     return data.map((item) => {
@@ -47,7 +47,7 @@ class NavLeft extends Component {
 
   render () {
     const { MenuConfig } = this.props;
-
+    console.log('MenuConfig', MenuConfig)
     return (
       <>
         <div className="logo">
@@ -56,11 +56,17 @@ class NavLeft extends Component {
             这里的/就是public目录了
           */}
           <img src="/assets/logo-ant.svg" alt="" />
-          <h1>管理系统</h1>
+          <h1>管理系统
+          </h1>
         </div>
-        <Menu onClick={handleClick} mode="vertical">
-          {this.state.menuTreeNode}
-        </Menu>
+        {
+          MenuConfig.length > 0 ? (
+            <Menu onClick={handleClick} mode="vertical">
+              {this.renderMenu(MenuConfig)}
+            </Menu>
+          ) : (<div>loading</div>)
+        }
+
       </>
     )
   }
