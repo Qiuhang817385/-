@@ -30,13 +30,13 @@ export default function ETable (props) {
     if (props.getList) {
       props.getList(getItem(selectedItemCheck))
     }
-  }, [props, selectedItemCheck])
+  }, [selectedItemCheck])
   //单选
   useEffect(() => {
     if (props.getItem) {
       props.getItem(getItem(selectedItem))
     }
-  }, [props, selectedItem])
+  }, [selectedItem])
 
   /**
    * 处理行点击事件-

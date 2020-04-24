@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
 // import App from './App';
 // import Home from './pages/route-demo/route1/Home';
 // import Home from './pages/route-demo/route2/router';
@@ -9,12 +10,16 @@ import './index.css';
 // import Home from './pages/route-demo/vivo2/Router';
 
 import Router from './router'
+import { Provider } from 'react-redux';
+import store from './redux/store'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   // <React.StrictMode>
   // <Home />
-  <Router />
+  <Provider store={store}>
+    <Router />
+  </Provider>
   // </React.StrictMode>
   ,
   document.getElementById('root')

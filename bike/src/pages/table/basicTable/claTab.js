@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import Utils from './../../../utils/utils';
-import ETable from '../../../components/ETable/EtableFun.js';
+import ETable from '../../../components/ETable/EtableFun1.js';
 import axios from '../../../axios/axios';
 import { Card, } from 'antd';
 import { columns2 } from './columns';
@@ -36,8 +36,11 @@ export default class Cll extends Component {
   /**
    * 
    */
-  hanleClick = () => {
-    console.log(this.state.item)
+  handleClick = (item) => {
+    console.log(item)
+    this.setState({
+      item
+    })
   }
 
   render () {
@@ -50,15 +53,14 @@ export default class Cll extends Component {
             dataSource={this.state.listData}
             columns={columns2}
             getList={func => {
-              console.log('func', this);
-              this.setState({
-                item: func
-              })
+              console.log('func', func);
+              // this.setState({
+              //   item: func
+              // })
               // 调用方法
-              // this.handleClick = func 
+              this.handleClick(func)
             }}
           />
-          <button onClick={this.hanleClick}>点击</button>
         </Card>
       </>
     )
