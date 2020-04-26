@@ -1,8 +1,14 @@
 import { all } from 'redux-saga/effects'
-import { fetchMenuSage } from '../components/NavLeft/store/saga'
+import { fetchMenuSaga } from '../components/NavLeft/store/saga'
+import { fetchCitySaga } from '../pages/city/store/saga';
+import { ftechOrderSaga } from '../pages/order/store/saga'
+import { fetchLoginSaga } from '../pages/login/store/saga';
 function* rootSaga () {
   yield all([
-    ...fetchMenuSage
+    ...fetchMenuSaga,
+    ...fetchCitySaga,
+    ...ftechOrderSaga,
+    ...fetchLoginSaga
   ])
 }
 export default rootSaga

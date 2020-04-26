@@ -20,6 +20,6 @@ function* watchFetch () {
   yield takeEvery(Types.GET_MENULIST, fetchMenu);
 }
 
-export const fetchMenuSage = [
+export const fetchMenuSaga = [
   watchFetch()
 ]

@@ -1,34 +1,37 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Button, Modal, message, } from 'antd';
-import axios from '../../axios/axios';
 import BaseForm from './../../components/BaseForm/BaseForm';
 import ETable from './../../components/ETable/EtableFun1'
 import { columns, formList, params, } from './data'
 import './order.scss'
 import { useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { getOrderList_action } from './store/actionCreator'
 
 
-export default function Order () {
+function Order (props) {
+  const { item_list, getOrderList_action } = props
   const [list, setList] = useState([]);
   const [pagination, setpagination] = useState(null);
   const [item, setItem] = useState();
   let history = useHistory();
   console.log('pagination', pagination)
   useEffect(() => {
-    requestList().then((res) => {
-      let arrRes = res.result.item_list;
-      arrRes.forEach((item, index) => {
-        // 这里的id需要单独做处理,而不是自己的Bug
-        item['key'] = index + 1;
-      })
-      setList([...arrRes])
-      setpagination({
-        showTotal: () => {
-          return `共${arrRes.length}条`
-        }
-      })
-    })
+    getOrderList_action(params.page);
   }, [])
+  useEffect(() => {
+    let arrRes = item_list;
+    arrRes.forEach((item, index) => {
+      // 这里的id需要单独做处理,而不是自己的Bug
+      item['key'] = index + 1;
+    })
+    setList([...arrRes])
+    setpagination({
+      showTotal: () => {
+        return `共${arrRes.length}条`
+      }
+    })
+  }, [item_list])
   let openOrderDetail = () => {
     if (!item) {
       Modal.info({
@@ -110,15 +113,11 @@ export default function Order () {
   )
 }
 
-const requestList = () => {
-  return axios.axiosGet({
-    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/order/list',
-    data: {
-      params: {
-        page: params.page
-      }
-    }
-  }).then((res) => {
-    return res
-  })
+const mapStateToProps = (state, ownProps) => ({
+  item_list: state['order_reducer'].item_list
+})
+const mapDispatchToProps = {
+  getOrderList_action
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Order)

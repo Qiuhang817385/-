@@ -2,36 +2,27 @@ import React from 'react';
 import { Card } from 'antd'
 import axios from '../../axios/axios'
 import './detail.less'
-export default class Order extends React.Component {
+import { getOrderDetail_action } from './store/actionCreator';
+// import { GET_ORDER_DETAIL } from './store/actionTypes';
+import { connect } from 'react-redux'
 
-  state = {}
+class Order extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
 
   componentDidMount () {
     let orderId = this.props.match.params.orderId;
     if (orderId) {
-      this.getDetailInfo(orderId);
+      this.props.getOrderDetail_action(orderId);
     }
   }
-
-  getDetailInfo = (orderId) => {
-    axios.axiosGet({
-      url: '/order/detail',
-      data: {
-        params: {
-          orderId: orderId
-        }
-      }
-    }).then((res) => {
-      if (res.code == 0) {
-        this.setState({
-          orderInfo: res.result
-        })
-        this.renderMap(res.result);
-      }
+  componentDidUpdate (prevProps, prevState) {
+    this.setState({
+      orderInfo: this.props.orderInfo
     })
   }
-
-
 
   render () {
     const info = this.state.orderInfo || {};
@@ -69,3 +60,13 @@ export default class Order extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  orderInfo: state['order_reducer'].orderInfo
+})
+const mapDispatchToProps = {
+  getOrderDetail_action
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Order)

@@ -12,19 +12,8 @@ function handleClick (e) {
   console.log('click', e);
 }
 class NavLeft extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuTreeNode: null
-    }
-  }
   componentDidMount () {
     this.props.getMenuList()
-    console.log(this.props)
-    // const menuTreeNode = this.renderMenu(this.props.MenuConfig);
-    // this.setState({
-    //   menuTreeNode
-    // })
   }
   renderMenu = (data) => {
     return data.map((item) => {
@@ -41,13 +30,11 @@ class NavLeft extends Component {
           {item.title}
         </Link>
       </Menu.Item>)
-
     })
   }
 
   render () {
     const { MenuConfig } = this.props;
-    console.log('MenuConfig', MenuConfig)
     return (
       <>
         <div className="logo">
@@ -79,6 +66,5 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   getMenuList
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavLeft)
