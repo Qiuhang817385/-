@@ -3,7 +3,10 @@ import { Row, Col, Button } from 'antd'
 import axios from '../../axios/axios';
 import Util from '../../utils/utils'
 import './index.scss'
-export default class Header extends Component {
+import { connect } from 'react-redux'
+import { logout_request } from './../../pages/login/store/actionCreator';
+import { withRouter } from 'react-router-dom';
+class Header extends Component {
   state = {
     userName: '',
     sysTime: '',
@@ -12,9 +15,9 @@ export default class Header extends Component {
   }
 
   componentDidMount () {
-    this.setState({
-      userName: '邱航',
-    })
+    // this.setState({
+    //   userName: '邱航',
+    // })
     setInterval(() => {
       // 传递这个time完全没有必要啊
       let sysTime = Util.formateDate(new Date().getTime());
@@ -40,8 +43,13 @@ export default class Header extends Component {
       }
     })
   }
+  logout = () => {
+    this.props.logout_request();
+    window.location.href = '/';
+  }
   render () {
-    const { menuType } = this.props;
+    // console.log('this.props', this.props)
+    const { menuType, userInfo } = this.props;
     const { sysTime, userName, dayPictureUrl, weather } = this.state;
     return (
       <div className="header">
@@ -53,8 +61,8 @@ export default class Header extends Component {
             </Col> : ''
           }
           <Col span={menuType ? 18 : 24}>
-            <span>欢迎,{userName}</span>
-            <Button type="primary">退出</Button>
+            <span>欢迎,{userInfo.username}</span>
+            <Button type="primary" onClick={this.logout}>退出</Button>
           </Col>
         </Row>
         {
@@ -78,3 +86,14 @@ export default class Header extends Component {
     )
   }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  userInfo: state['login_reducer'].userInfo
+})
+const mapDispatchToProps = {
+  logout_request
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

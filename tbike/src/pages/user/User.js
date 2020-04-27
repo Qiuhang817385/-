@@ -291,7 +291,7 @@ export default function User () {
 }
 const requestList = () => {
   return axios.axiosGet({
-    url: 'http://www.qiuhang.club:7300/mock/5e8c119b00fbdf09dcf21f9f/bike/table/list',
+    url: '/table/list',
     data: {
       params: {
         page: params.page

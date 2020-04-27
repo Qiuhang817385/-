@@ -242,3 +242,9 @@ function useState(initState) {
 	return useReducer((oldState, newState) => newState, initState)	
 }
 ```
+
+
+
+
+
+[redux-actions](https://github.com/redux-utilities/redux-actions)

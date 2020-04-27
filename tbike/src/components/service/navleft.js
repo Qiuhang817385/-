@@ -1,10 +1,10 @@
 import axios from '../../axios/axios';
-export const getMenuList = () => {
+export const getMenuList = (keys) => {
   return axios.axiosGet({
     url: '/roles',
     data: {
       params: {
-        key: 1
+        key: keys
       }
     }
   }).then((res) => {

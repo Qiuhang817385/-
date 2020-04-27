@@ -13,7 +13,7 @@ function handleClick (e) {
 }
 class NavLeft extends Component {
   componentDidMount () {
-    this.props.getMenuList()
+    this.props.getMenuList(this.props.userInfo.key)
   }
   renderMenu = (data) => {
     return data.map((item) => {
@@ -60,7 +60,8 @@ class NavLeft extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    MenuConfig: state['navLeft_reducer'].MenuConfig
+    MenuConfig: state['navLeft_reducer'].MenuConfig,
+    userInfo: state['login_reducer'].userInfo
   }
 }
 const mapDispatchToProps = {

@@ -34,6 +34,7 @@ import Common from './Common.js'
 import orderDeatil from './pages/order/detailInline'
 import userDeatil from './pages/user/detail'
 import BankForm from './pages/bankForm/BankForm';
+import PrivateRoute from './route/privateRoute'
 export default function router () {
   return (
     <Router>
@@ -79,8 +80,8 @@ export default function router () {
                   <Route path="/charts/bar" component={Bar} />
                   <Route path="/charts/line" component={Line} />
                   <Route path="/charts/pie" component={Pie} />
-                  <Route path="/order" component={Order} />
-                  <Route path="/user" component={User} />
+                  <PrivateRoute path="/order" component={Order} />
+                  <PrivateRoute path="/user" component={User} />
                   {/* <Redirect to='/home'></Redirect> */}
                   <Route component={NoMatch} />
                 </Switch>

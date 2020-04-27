@@ -11,6 +11,7 @@ import Router from './router'
 import { Provider } from 'react-redux';
 import store from './redux/store'
 import * as serviceWorker from './serviceWorker';
+import interceptor from './axios/global'
 ReactDOM.render(
   // <React.StrictMode>
   // <Home />
