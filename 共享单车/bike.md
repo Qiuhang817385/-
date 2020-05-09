@@ -67,7 +67,7 @@ npm install --save @ant-design/icons
 ## 安装Echarts
 
 ```js
-yarn add echarts echarts-for-react --save
+yarn add echarts echarts-for-react
 ```
 
 ## 安装react-router
@@ -115,8 +115,6 @@ yarn add axios
 
 ```js
 yarn add moment
-
-后续使用需要继续学习,包括国际化???
 ```
 
 

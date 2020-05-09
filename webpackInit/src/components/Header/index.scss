@@ -1,0 +1,83 @@
+@import "../../style/default.scss";
+
+.header {
+  background-color: $colorM;
+
+  .header-top {
+    font-weight: 600;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+    text-align: right;
+
+    .logoIcon {
+      line-height: 60px;
+      text-align: left;
+
+      img {
+        height: 40px;
+        vertical-align: middle;
+
+      }
+    }
+
+    Button {
+      margin-left: 40px;
+    }
+  }
+
+  .breadcrumb {
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    border-top: 1px solid #f9c700;
+
+
+    .breadcrumb-title {
+      text-align: center;
+      position: relative;
+      font-size: 15px;
+
+      &::after {
+        position: absolute;
+        content: '';
+        display: block;
+        left: 50%;
+        margin-left: -12px;
+        top: 39px;
+        // width: 10px;
+        // height: 10px;
+        // background-color: red;
+        border-top: 9px solid $colorM;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+      }
+    }
+
+    .weather {
+      text-align: right;
+      font-size: 15px;
+
+      .date {
+        margin: 0 20px;
+        vertical-align: middle;
+      }
+
+      .weather-img {
+        margin: 0 20px;
+
+        img {
+          vertical-align: middle;
+          height: 14px;
+        }
+      }
+
+      .weather-detail {
+        display: inline-block;
+        vertical-align: middle;
+
+      }
+    }
+  }
+}
