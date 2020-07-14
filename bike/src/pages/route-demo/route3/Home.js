@@ -12,7 +12,7 @@ export default class Home extends Component {
             <Link to="/main">Main2</Link>
           </li>
           <li>
-            <Link to="/about">About2</Link>
+            <Link to={{ pathname: '/about', search: `${123}`, state: { name: 'qiu' }, a: { age: 12 } }}>About2</Link>
           </li>
           <li>
             <Link to="/imooc">imooc这个页面实际不存在</Link>

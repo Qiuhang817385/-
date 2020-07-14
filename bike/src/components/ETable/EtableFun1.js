@@ -80,15 +80,15 @@ export default function ETable (props) {
   let onSelectChange = (selectedRowKeys, selectedRows) => {
     let rowSelection = props.rowSelection;
     if (rowSelection === 'checkbox') {
-      console.log('selectedRowKeys :', selectedRowKeys);
-      console.log('selectedRows :', selectedRows);
+      // console.log('selectedRowKeys :', selectedRowKeys);
+      // console.log('selectedRows :', selectedRows);
       if (!selectedRows[0]) {
         selectedRows.splice(0, 1);
       }
       setSelectedRowKeys([...selectedRowKeys])
       setSelectedItemCheck([...selectedRows])
     } else {
-      console.log('selectedRowKeys :', selectedRowKeys);
+      // console.log('selectedRowKeys :', selectedRowKeys);
       setSelectedRowKeys(selectedRowKeys)
       setSelectedItem(selectedRows[0])
     }

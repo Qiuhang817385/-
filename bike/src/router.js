@@ -23,6 +23,7 @@ import LoginForm from './pages/form/login/Login';
 import RegisterForm from './pages/form/register/Register';
 import BasicTable from './pages/table/basicTable/BasicTable';
 import HighTable from './pages/table/HighTable/HighTable';
+import BugFix from './pages/table/bugFix/Table';
 import City from './pages/city/City';
 import Order from './pages/order/Order'
 import User from './pages/user/User'
@@ -34,6 +35,7 @@ import Common from './Common.js'
 import orderDeatil from './pages/order/detailInline'
 import userDeatil from './pages/user/detail'
 import BankForm from './pages/bankForm/BankForm';
+import TimeLine from './pages/ui/timeLine/TimeLine';
 export default function router () {
   return (
     <Router>
@@ -69,11 +71,13 @@ export default function router () {
                   <Route path='/ui/transfer' component={Transfers} />
                   <Route path='/ui/description' component={Descriptions} />
                   <Route path='/ui/tree' component={Trees} />
+                  <Route path='/ui/timeLine' component={TimeLine} />
                   <Route path='/form/login' component={LoginForm} />
                   <Route path='/form/reg' component={RegisterForm} />
                   <Route path='/bankForm' component={BankForm} />
                   <Route path='/table/basic' component={BasicTable} />
                   <Route path='/table/high' component={HighTable} />
+                  <Route path='/table/bugFix' component={BugFix} />
                   <Route path="/city" component={City} />
                   <Route path="/permission" component={Permissions} />
                   <Route path="/charts/bar" component={Bar} />

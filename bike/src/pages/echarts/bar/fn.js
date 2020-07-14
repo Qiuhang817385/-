@@ -4,6 +4,10 @@ export const getOption = () => {
       text: '用户骑行订单'
     },
     tooltip: {
+      /* 
+        'axis'
+        坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。
+       */
       trigger: 'axis'
     },
     xAxis: {
@@ -18,10 +22,12 @@ export const getOption = () => {
       ]
     },
     yAxis: {
+      // 'value' 数值轴，适用于连续数据。
       type: 'value'
     },
     series: [
       {
+        // name:系列名称，用于tooltip的显示
         name: '订单量',
         type: 'bar',
         data: [
@@ -31,7 +37,7 @@ export const getOption = () => {
           3000,
           2000,
           1200,
-          800
+          6900
         ]
       }
     ]

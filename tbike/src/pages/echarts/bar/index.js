@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Card } from 'antd'
 import { getOption, getOption2 } from './fn'
+// import ReactEchartsCore from 'echarts-for-react/lib/core';
 import ReactEcharts from 'echarts-for-react';
 import echartTheme from '../echartTheme'
 // import echarts from 'echarts'

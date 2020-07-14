@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 // import App from './App';
-// import Home from './pages/route-demo/route1/Home';
+// import Home from './pages/route-demo/route1D/Home';
 // import Home from './pages/route-demo/route2/router';
 // import Home from './pages/route-demo/route3/router';
 // import Home from './pages/route-demo/vivo/router';

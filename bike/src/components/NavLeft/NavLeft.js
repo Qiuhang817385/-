@@ -38,7 +38,6 @@ export default class NavLeft extends Component {
           {item.title}
         </Link>
       </Menu.Item>)
-
     })
   }
 

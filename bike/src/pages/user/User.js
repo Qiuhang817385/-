@@ -45,7 +45,7 @@ export default function User () {
     // 把params传递给本地的params,已经有一个分页了, 然后请求数据
   }
   /**
-   * 创建增加
+   * 创建增加--------------------------------------------------
    */
   let handleC = () => {
     setType('create')
@@ -61,7 +61,7 @@ export default function User () {
     setVisible(false);
   };
   /**
-   * 查询
+   * 查询--------------------------------------------------
    */
   let handleR = () => {
     // setVisible(true);
@@ -82,7 +82,7 @@ export default function User () {
     setVisible(false);
   };
   /**
-   * 更新编辑
+   * 更新编辑--------------------------------------------------
    */
   let handleU = () => {
     // console.log('baseForm', baseForm)
@@ -146,7 +146,7 @@ export default function User () {
     setUpVisible(false)
   }
   /**
-   * 删除
+   * 删除--------------------------------------------------
    */
   let handleD = () => {
     if (!Item) {
@@ -223,7 +223,9 @@ export default function User () {
         </Row>
       </Card>
       <Card title="详情菜单" className="card-wrapper">
+        {/* -------------------------------------------------- */}
         <EtableFun
+          rowSelection={'checkbox'}
           columns={columns}
           dataSource={list}
           getItem={
@@ -234,6 +236,7 @@ export default function User () {
           }
           pagination={true}
         />
+        {/* -------------------------------------------------- */}
       </Card>
       <Modal
         visible={visible}
@@ -274,12 +277,12 @@ export default function User () {
       >
         <UpdateForm
           filterSubmit={(res) => {
-            console.log('res', res)
+            // console.log('res', res)
             // setItem(res)
           }}
           data={update}
           reset={(formObj) => {
-            console.log('formObjc', formObj)
+            // console.log('formObjc', formObj)
             updateForm = formObj
           }}
         ></UpdateForm>

@@ -173,22 +173,30 @@ export const getOption3 = () => {
           {
             value: 1000,
             name: '周一'
-          }, {
+          },
+          {
             value: 1000,
             name: '周二'
-          }, {
+          },
+          {
             value: 2000,
             name: '周三'
-          }, {
+          },
+          // 15618399871
+          // 
+          {
             value: 1500,
             name: '周四'
-          }, {
+          },
+          {
             value: 3000,
             name: '周五'
-          }, {
+          },
+          {
             value: 2000,
             name: '周六'
-          }, {
+          },
+          {
             value: 1200,
             name: '周日'
           }

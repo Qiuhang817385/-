@@ -9,7 +9,9 @@ export default class Main extends Component {
           [1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
             return (
               <div>
+                {/* 路由表,path="/main/:id" */}
                 <Link to={`/main/${item}`}>商品{item}页面</Link>
+                {/* 获取this.props.match.pramps.id */}
               </div>
             )
           })

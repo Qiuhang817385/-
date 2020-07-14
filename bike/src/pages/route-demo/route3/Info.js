@@ -13,8 +13,11 @@
 // }
 import React from 'react'
 import { useParams } from 'react-router-dom'
-export default function Info () {
+export default function Info (props) {
+  console.log('props', props)
   let { mainId } = useParams();
+  // 字符串类型
+  console.log('typeof mainId', typeof mainId)
   return (
     <div>
       商品ID号:{mainId}

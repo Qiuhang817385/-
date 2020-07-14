@@ -67,6 +67,10 @@ const menuList = [
         title: '描述列表',
         key: '/ui/description',
       },
+      {
+        title: '时间轴',
+        key: '/ui/timeLine',
+      },
     ]
   },
   {
@@ -94,7 +98,11 @@ const menuList = [
       {
         title: '高级表格',
         key: '/table/high',
-      }
+      },
+      {
+        title: 'Bug修复表格',
+        key: '/table/bugFix',
+      },
     ]
   },
   {
